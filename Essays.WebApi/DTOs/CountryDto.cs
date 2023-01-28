@@ -1,9 +1,8 @@
-﻿namespace Essays.WebApi.Models
+﻿namespace Essays.WebApi.DTOs
 {
-    public class Country
+    public class CountryDto
     {
         public string CountryAbbreviation { get; set; } = string.Empty;
         public string CountryName { get; set; } = string.Empty;
-        public ICollection<CountriesOfAuthors>? CountriesOfAuthors { get; set; }
     }
 }

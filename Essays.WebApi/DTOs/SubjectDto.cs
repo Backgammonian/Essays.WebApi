@@ -1,11 +1,9 @@
-﻿namespace Essays.WebApi.Models
+﻿namespace Essays.WebApi.DTOs
 {
-    public class Subject
+    public class SubjectDto
     {
         public string SubjectId { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public SubjectCategory? Category { get; set; }
-        public ICollection<EssaysAboutSubjects>? EssaysAboutSubjects { get; set; }
     }
 }
