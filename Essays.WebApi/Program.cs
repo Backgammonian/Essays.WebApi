@@ -1,15 +1,21 @@
 using Essays.WebApi.Data;
+using Essays.WebApi.Data.Implementations;
+using Essays.WebApi.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Essays.WebApi
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
+            /*    .AddJsonOptions(x =>
+                    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);*/
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            builder.Services.AddScoped<IRandomGenerator, RandomGenerator>();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -19,6 +25,13 @@ namespace Essays.WebApi
             });
 
             var app = builder.Build();
+
+            if (args.Length > 0 &&
+                args[0].ToLower() == "seeddata")
+            {
+                await SeedData(app);
+            }
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -32,6 +45,23 @@ namespace Essays.WebApi
             app.MapControllers();
 
             app.Run();
+        }
+
+        private static async Task SeedData(IApplicationBuilder app)
+        {
+            Console.WriteLine("(SeedData) Seeding the database");
+
+            using var serviceScope = app.ApplicationServices.CreateScope();
+            var dataContext = serviceScope.ServiceProvider.GetService<DataContext>();
+            if (dataContext == null)
+            {
+                Console.WriteLine("(SeedData) Can't seed the database!");
+
+                return;
+            }
+
+            var seeder = new Seeder(dataContext);
+            await seeder.Seed();
         }
     }
 }

@@ -13,7 +13,6 @@ namespace Essays.WebApi.Data
         public DbSet<CountriesOfAuthors> CountriesOfAuthors { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Essay> Essays { get; set; }
-        public DbSet<EssayImage> EssayImages { get; set; }
         public DbSet<EssaysAboutSubjects> EssaysAboutSubjects { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<SubjectCategory> SubjectCategories { get; set; }
