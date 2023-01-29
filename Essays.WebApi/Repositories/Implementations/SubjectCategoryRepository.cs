@@ -36,18 +36,17 @@ namespace Essays.WebApi.Repositories.Implementations
                 return null;
             }
 
-            var subjectCategory = await _dataContext.SubjectCategories
+            var subjects = await _dataContext.Subjects
                 .AsNoTracking()
-                .Where(s => s.SubjectCategoryId == subjectCategoryId)
-                .Include(s => s.Subjects)
-                .FirstOrDefaultAsync();
+                .Where(s => s.CategoryId == subjectCategoryId)
+                .ToListAsync();
 
-            if (subjectCategory == null)
+            if (subjects == null)
             {
                 return null;
             }
 
-            return subjectCategory.Subjects;
+            return subjects;
         }
 
         public async Task<bool> DoesSubjectCategoryExist(string subjectCategoryId)

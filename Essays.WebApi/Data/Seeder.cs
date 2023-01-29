@@ -112,35 +112,40 @@ namespace Essays.WebApi.Data
                 {
                     SubjectId = "1",
                     Name = "Subject 1",
-                    Description = "Subject 1 description"
+                    Description = "Subject 1 description",
+                    CategoryId = subjectCategories[0].SubjectCategoryId
                 },
 
                 new Subject()
                 {
                     SubjectId = "2",
                     Name = "Subject 2",
-                    Description = "Subject 2 description"
+                    Description = "Subject 2 description",
+                    CategoryId = subjectCategories[0].SubjectCategoryId
                 },
 
                 new Subject()
                 {
                     SubjectId = "3",
                     Name = "Subject 3",
-                    Description = "Subject 3 description"
+                    Description = "Subject 3 description",
+                    CategoryId = subjectCategories[0].SubjectCategoryId
                 },
 
                 new Subject()
                 {
                     SubjectId = "4",
                     Name = "Subject 4",
-                    Description = "Subject 4 description"
+                    Description = "Subject 4 description",
+                    CategoryId = subjectCategories[2].SubjectCategoryId
                 },
 
                 new Subject()
                 {
                     SubjectId = "5",
                     Name = "Subject 5",
-                    Description = "Subject 5 description"
+                    Description = "Subject 5 description",
+                    CategoryId = subjectCategories[3].SubjectCategoryId
                 },
             };
 
@@ -152,6 +157,7 @@ namespace Essays.WebApi.Data
                     Title = "Essay 1",
                     Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
                         "Sed ultricies leo vel blandit condimentum.",
+                    AuthorId = authors[0].AuthorId
                 },
 
                 new Essay()
@@ -159,6 +165,7 @@ namespace Essays.WebApi.Data
                     EssayId = "2",
                     Title = "Essay 2",
                     Content = "Cras at finibus lacus, sed faucibus lorem. Etiam tempor et risus vitae lobortis.",
+                    AuthorId = authors[0].AuthorId
                 },
 
                 new Essay()
@@ -166,6 +173,7 @@ namespace Essays.WebApi.Data
                     EssayId = "3",
                     Title = "Essay 3",
                     Content = "Fusce sit amet nibh magna. Sed a pretium dui, sit amet finibus tellus.",
+                    AuthorId = authors[1].AuthorId
                 },
 
                 new Essay()
@@ -173,6 +181,7 @@ namespace Essays.WebApi.Data
                     EssayId = "4",
                     Title = "Essay 4",
                     Content = "Suspendisse ac blandit metus, eu facilisis enim. Sed porttitor lorem massa.",
+                    AuthorId = authors[1].AuthorId
                 },
             };
 

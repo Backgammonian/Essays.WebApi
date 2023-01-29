@@ -24,7 +24,7 @@ namespace Essays.WebApi.Controllers
             _randomGenerator = randomGenerator;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         [ProducesResponseType(200, Type = typeof(ICollection<SubjectCategory>))]
         public async Task<IActionResult> GetSubjectCategories()
         {
@@ -34,7 +34,7 @@ namespace Essays.WebApi.Controllers
             return Ok(subjectCategoriesDto);
         }
 
-        [HttpGet("{subjectCategoryId}")]
+        [HttpGet("GetSubjectCategory")]
         [ProducesResponseType(200, Type = typeof(SubjectCategory))]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetSubjectCategory([FromQuery] string subjectCategoryId)
@@ -51,7 +51,7 @@ namespace Essays.WebApi.Controllers
             return Ok(subjectCategoryDto);
         }
 
-        [HttpGet("{subjectCategoryId}/subjects")]
+        [HttpGet("GetSubjectsFromCategory")]
         [ProducesResponseType(200, Type = typeof(ICollection<Subject>))]
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
@@ -74,7 +74,7 @@ namespace Essays.WebApi.Controllers
             return Ok(subjectsDto);
         }
 
-        [HttpPost]
+        [HttpPost("Create")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(422)]
@@ -109,7 +109,7 @@ namespace Essays.WebApi.Controllers
             return Ok(subjectCategory.SubjectCategoryId);
         }
 
-        [HttpPut("{subjectCategoryId}")]
+        [HttpPut("Update")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -145,7 +145,7 @@ namespace Essays.WebApi.Controllers
             return Ok(subjectCategory.SubjectCategoryId);
         }
 
-        [HttpDelete("{subjectCategoryId}")]
+        [HttpDelete("Delete")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteSubjectCategory([FromQuery] string subjectCategoryId)
