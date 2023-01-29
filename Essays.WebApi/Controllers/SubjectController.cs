@@ -2,7 +2,6 @@
 using Essays.WebApi.Data.Interfaces;
 using Essays.WebApi.DTOs;
 using Essays.WebApi.Models;
-using Essays.WebApi.Repositories.Implementations;
 using Essays.WebApi.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,17 +14,14 @@ namespace Essays.WebApi.Controllers
         private readonly IMapper _mapper;
         private readonly ISubjectRepository _subjectRepository;
         private readonly IRandomGenerator _randomGenerator;
-        private readonly ISubjectCategoryRepository _subjectCategoryRepository;
 
         public SubjectController(IMapper mapper,
             ISubjectRepository subjectRepository,
-            IRandomGenerator randomGenerator,
-            ISubjectCategoryRepository subjectCategoryRepository)
+            IRandomGenerator randomGenerator)
         {
             _mapper = mapper;
             _subjectRepository = subjectRepository;
             _randomGenerator = randomGenerator;
-            _subjectCategoryRepository = subjectCategoryRepository;
         }
 
         [HttpGet("GetAll")]
@@ -46,7 +42,7 @@ namespace Essays.WebApi.Controllers
             var any = await _subjectRepository.DoesSubjectExist(subjectId);
             if (!any)
             {
-                return NotFound();
+                return NotFound("Subject with such ID doesn't exist");
             }
 
             var subject = await _subjectRepository.GetSubject(subjectId);
@@ -63,7 +59,7 @@ namespace Essays.WebApi.Controllers
             var category = await _subjectRepository.GetCategoryOfSubject(subjectId);
             if (category == null)
             {
-                return NotFound();
+                return NotFound("Subject with such ID doesn't exist");
             }
 
             return Ok(category);
@@ -77,7 +73,7 @@ namespace Essays.WebApi.Controllers
             var essays = await _subjectRepository.GetEssaysAboutSubject(subjectId);
             if (essays == null)
             {
-                return NotFound();
+                return NotFound($"There are no essays about subject with ID '{subjectId}'");
             }
 
             return Ok(essays);
@@ -92,7 +88,7 @@ namespace Essays.WebApi.Controllers
         {
             if (subjectCreate == null)
             {
-                return BadRequest();
+                return BadRequest("Subject model is null!");
             }
 
             var subjects = await _subjectRepository.GetSubjects();
@@ -102,19 +98,18 @@ namespace Essays.WebApi.Controllers
 
             if (existingSubject != null)
             {
-                return StatusCode(422);
+                return StatusCode(422, $"Subject with name '{subjectCreate.Name}' already exists");
             }
 
             var subject = _mapper.Map<Subject>(subjectCreate);
             subject.SubjectId = _randomGenerator.GetRandomId();
             subject.Name = subject.Name.Trim();
             subject.Description = subject.Description.Trim();
-            subject.CategoryId = subjectCreate.CategoryId;
 
             var created = await _subjectRepository.CreateSubject(subject);
             if (!created)
             {
-                return StatusCode(500);
+                return StatusCode(500, "Failed to create a new subject");
             }
 
             return Ok(subject.SubjectId);
@@ -129,7 +124,7 @@ namespace Essays.WebApi.Controllers
         {
             if (subjectUpdate == null)
             {
-                return BadRequest();
+                return BadRequest("Subject model is null!");
             }
 
             var subjectId = subjectUpdate.SubjectId;
@@ -137,16 +132,17 @@ namespace Essays.WebApi.Controllers
             var any = await _subjectRepository.DoesSubjectExist(subjectId);
             if (!any)
             {
-                return NotFound();
+                return NotFound("Subject with such ID doesn't exist");
             }
 
             var subject = _mapper.Map<Subject>(subjectUpdate);
             subject.Name = subject.Name.Trim();
+            subject.Description = subject.Description.Trim();
 
             var updated = await _subjectRepository.UpdateSubject(subject);
             if (!updated)
             {
-                return StatusCode(500);
+                return StatusCode(500, $"Failed to update the subject with ID '{subjectUpdate.SubjectId}'");
             }
 
             return Ok(subject.SubjectId);
@@ -160,19 +156,19 @@ namespace Essays.WebApi.Controllers
             var any = await _subjectRepository.DoesSubjectExist(subjectId);
             if (!any)
             {
-                return NotFound();
+                return NotFound("Subject with such ID doesn't exist");
             }
 
             var subjectToDelete = await _subjectRepository.GetSubject(subjectId);
             if (subjectToDelete == null)
             {
-                return NotFound();
+                return NotFound("Subject with such ID doesn't exist");
             }
 
             var deleted = await _subjectRepository.DeleteSubject(subjectToDelete);
             if (!deleted)
             {
-                return StatusCode(500);
+                return StatusCode(500, $"Failed to delete the subject with ID '{subjectId}'");
             }
 
             return Ok(subjectToDelete.SubjectId);

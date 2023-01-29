@@ -21,6 +21,7 @@ namespace Essays.WebApi
             builder.Services.AddScoped<IRandomGenerator, RandomGenerator>();
             builder.Services.AddScoped<ISubjectCategoryRepository, SubjectCategoryRepository>();
             builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+            builder.Services.AddScoped<ICountryRepository, CountryRepository>();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
