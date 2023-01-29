@@ -42,7 +42,7 @@ namespace Essays.WebApi.Controllers
             var any = await _subjectCategoryRepository.DoesSubjectCategoryExist(subjectCategoryId);
             if (!any)
             {
-                return NotFound();
+                return NotFound("Subject category with such ID doesn't exist");
             }
 
             var subjectCategory = await _subjectCategoryRepository.GetSubjectCategory(subjectCategoryId);
@@ -60,7 +60,7 @@ namespace Essays.WebApi.Controllers
             var any = await _subjectCategoryRepository.DoesSubjectCategoryExist(subjectCategoryId);
             if (!any)
             {
-                return NotFound();
+                return NotFound("Subject category with such ID doesn't exist");
             }
 
             var subjects = await _subjectCategoryRepository.GetSubjectsFromCategory(subjectCategoryId);
@@ -83,7 +83,7 @@ namespace Essays.WebApi.Controllers
         {
             if (subjectCategoryCreate == null)
             {
-                return BadRequest();
+                return BadRequest("Subject category model is null!");
             }
 
             var subjectCategories = await _subjectCategoryRepository.GetSubjectCategories();
@@ -93,7 +93,7 @@ namespace Essays.WebApi.Controllers
 
             if (existingSubjectCategory != null)
             {
-                return StatusCode(422);
+                return StatusCode(422, $"Subject category with name '{subjectCategoryCreate.Name.Trim()}' already exists");
             }
 
             var subjectCategory = _mapper.Map<SubjectCategory>(subjectCategoryCreate);
@@ -103,7 +103,7 @@ namespace Essays.WebApi.Controllers
             var created = await _subjectCategoryRepository.CreateSubjectCategory(subjectCategory);
             if (!created)
             {
-                return StatusCode(500);
+                return StatusCode(500, "Failed to create a new subject category");
             }
 
             return Ok(subjectCategory.SubjectCategoryId);
@@ -114,23 +114,18 @@ namespace Essays.WebApi.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateSubjectCategory([FromQuery] string subjectCategoryId,
-            [FromBody] SubjectCategoryDto subjectCategoryUpdate)
+        public async Task<IActionResult> UpdateSubjectCategory([FromBody] SubjectCategoryDto subjectCategoryUpdate)
         {
             if (subjectCategoryUpdate == null)
             {
-                return BadRequest();
+                return BadRequest("Subject category model is null!");
             }
 
-            if (subjectCategoryId != subjectCategoryUpdate.SubjectCategoryId)
-            {
-                return BadRequest();
-            }
-
+            var subjectCategoryId = subjectCategoryUpdate.SubjectCategoryId;
             var any = await _subjectCategoryRepository.DoesSubjectCategoryExist(subjectCategoryId);
             if (!any)
             {
-                return NotFound();
+                return NotFound("Subject category with such ID doesn't exist");
             }
 
             var subjectCategory = _mapper.Map<SubjectCategory>(subjectCategoryUpdate);
@@ -139,10 +134,10 @@ namespace Essays.WebApi.Controllers
             var updated = await _subjectCategoryRepository.UpdateSubjectCategory(subjectCategory);
             if (!updated)
             {
-                return StatusCode(500);
+                return StatusCode(500, $"Failed to update the subject category with ID '{subjectCategoryId}'");
             }
 
-            return Ok(subjectCategory.SubjectCategoryId);
+            return Ok(subjectCategoryId);
         }
 
         [HttpDelete("Delete")]
@@ -153,19 +148,19 @@ namespace Essays.WebApi.Controllers
             var any = await _subjectCategoryRepository.DoesSubjectCategoryExist(subjectCategoryId);
             if (!any)
             {
-                return NotFound();
+                return NotFound("Subject category with such ID doesn't exist");
             }
 
             var subjectCategoryToDelete = await _subjectCategoryRepository.GetSubjectCategory(subjectCategoryId);
             if (subjectCategoryToDelete == null)
             {
-                return NotFound();
+                return NotFound("Subject category with such ID doesn't exist");
             }
 
             var deleted = await _subjectCategoryRepository.DeleteSubjectCategory(subjectCategoryToDelete);
             if (!deleted)
             {
-                return StatusCode(500);
+                return StatusCode(500, $"Failed to delete the subject category with ID '{subjectCategoryId}'");
             }
 
             return Ok(subjectCategoryToDelete.SubjectCategoryId);
