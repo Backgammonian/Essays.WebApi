@@ -1,7 +1,10 @@
 using Essays.WebApi.Data;
 using Essays.WebApi.Data.Implementations;
 using Essays.WebApi.Data.Interfaces;
+using Essays.WebApi.Repositories.Implementations;
+using Essays.WebApi.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace Essays.WebApi
 {
@@ -11,11 +14,13 @@ namespace Essays.WebApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllers();
-            /*    .AddJsonOptions(x =>
-                    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);*/
+            builder.Services.AddControllers()
+                .AddJsonOptions(x =>
+                    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             builder.Services.AddScoped<IRandomGenerator, RandomGenerator>();
+            builder.Services.AddScoped<ISubjectCategoryRepository, SubjectCategoryRepository>();
+            builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 

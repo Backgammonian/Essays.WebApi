@@ -15,17 +15,20 @@ namespace Essays.WebApi.Controllers
         private readonly IMapper _mapper;
         private readonly ISubjectRepository _subjectRepository;
         private readonly IRandomGenerator _randomGenerator;
+        private readonly ISubjectCategoryRepository _subjectCategoryRepository;
 
         public SubjectController(IMapper mapper,
             ISubjectRepository subjectRepository,
-            IRandomGenerator randomGenerator)
+            IRandomGenerator randomGenerator,
+            ISubjectCategoryRepository subjectCategoryRepository)
         {
             _mapper = mapper;
             _subjectRepository = subjectRepository;
             _randomGenerator = randomGenerator;
+            _subjectCategoryRepository = subjectCategoryRepository;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         [ProducesResponseType(200, Type = typeof(ICollection<Subject>))]
         public async Task<IActionResult> GetSubjects()
         {
@@ -35,7 +38,7 @@ namespace Essays.WebApi.Controllers
             return Ok(subjectsDto);
         }
 
-        [HttpGet("{subjectId}")]
+        [HttpGet("GetSubject")]
         [ProducesResponseType(200, Type = typeof(Subject))]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetSubject([FromQuery] string subjectId)
@@ -47,12 +50,12 @@ namespace Essays.WebApi.Controllers
             }
 
             var subject = await _subjectRepository.GetSubject(subjectId);
-            var subjectDto = _mapper.Map<SubjectCategoryDto>(subject);
+            var subjectDto = _mapper.Map<SubjectDto>(subject);
 
             return Ok(subjectDto);
         }
 
-        [HttpGet("{subjectId}/category")]
+        [HttpGet("GetCategoryOfSubject")]
         [ProducesResponseType(200, Type = typeof(SubjectCategory))]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetCategoryOfSubject([FromQuery] string subjectId)
@@ -66,7 +69,7 @@ namespace Essays.WebApi.Controllers
             return Ok(category);
         }
 
-        [HttpGet("{subjectId}/essays")]
+        [HttpGet("GetEssaysAboutSubject")]
         [ProducesResponseType(200, Type = typeof(ICollection<Essay>))]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetEssaysAboutSubject([FromQuery] string subjectId)
@@ -80,7 +83,7 @@ namespace Essays.WebApi.Controllers
             return Ok(essays);
         }
 
-        [HttpPost]
+        [HttpPost("Create")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(422)]
@@ -105,6 +108,8 @@ namespace Essays.WebApi.Controllers
             var subject = _mapper.Map<Subject>(subjectCreate);
             subject.SubjectId = _randomGenerator.GetRandomId();
             subject.Name = subject.Name.Trim();
+            subject.Description = subject.Description.Trim();
+            subject.CategoryId = subjectCreate.CategoryId;
 
             var created = await _subjectRepository.CreateSubject(subject);
             if (!created)
@@ -115,23 +120,19 @@ namespace Essays.WebApi.Controllers
             return Ok(subject.SubjectId);
         }
 
-        [HttpPut("{subjectId}")]
+        [HttpPut("Update")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateSubjectCategory([FromQuery] string subjectId,
-            [FromBody] SubjectDto subjectUpdate)
+        public async Task<IActionResult> UpdateSubject([FromBody] SubjectDto subjectUpdate)
         {
             if (subjectUpdate == null)
             {
                 return BadRequest();
             }
 
-            if (subjectId != subjectUpdate.SubjectId)
-            {
-                return BadRequest();
-            }
+            var subjectId = subjectUpdate.SubjectId;
 
             var any = await _subjectRepository.DoesSubjectExist(subjectId);
             if (!any)
@@ -151,10 +152,10 @@ namespace Essays.WebApi.Controllers
             return Ok(subject.SubjectId);
         }
 
-        [HttpDelete("{subjectId}")]
+        [HttpDelete("Delete")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> DeleteSubjectCategory([FromQuery] string subjectId)
+        public async Task<IActionResult> DeleteSubject([FromQuery] string subjectId)
         {
             var any = await _subjectRepository.DoesSubjectExist(subjectId);
             if (!any)
