@@ -45,10 +45,10 @@ namespace Essays.WebApi.Controllers
                 return NotFound();
             }
 
-            var subjectInfo = await _subjectCategoryRepository.GetSubjectCategory(subjectCategoryId);
-            var subjectInfoDto = _mapper.Map<SubjectCategoryDto>(subjectInfo);
+            var subjectCategory = await _subjectCategoryRepository.GetSubjectCategory(subjectCategoryId);
+            var subjectCategoryDto = _mapper.Map<SubjectCategoryDto>(subjectCategory);
 
-            return Ok(subjectInfoDto);
+            return Ok(subjectCategoryDto);
         }
 
         [HttpGet("{subjectCategoryId}/subjects")]
@@ -63,13 +63,13 @@ namespace Essays.WebApi.Controllers
                 return NotFound();
             }
 
-            var subjectInfo = await _subjectCategoryRepository.GetSubjectCategory(subjectCategoryId);
-            if (subjectInfo == null)
+            var subjects = await _subjectCategoryRepository.GetSubjectsFromCategory(subjectCategoryId);
+            if (subjects == null)
             {
                 return NoContent();
             }
 
-            var subjectsDto = _mapper.Map<List<SubjectDto>>(subjectInfo.Subjects);
+            var subjectsDto = _mapper.Map<List<SubjectDto>>(subjects);
 
             return Ok(subjectsDto);
         }
@@ -97,14 +97,16 @@ namespace Essays.WebApi.Controllers
             }
 
             var subjectCategory = _mapper.Map<SubjectCategory>(subjectCategoryCreate);
+            subjectCategory.SubjectCategoryId = _randomGenerator.GetRandomId();
             subjectCategory.Name = subjectCategory.Name.Trim();
+
             var created = await _subjectCategoryRepository.CreateSubjectCategory(subjectCategory);
             if (!created)
             {
                 return StatusCode(500);
             }
 
-            return Ok($"Successfully created new subject category '{subjectCategory.Name}'");
+            return Ok(subjectCategory.SubjectCategoryId);
         }
 
         [HttpPut("{subjectCategoryId}")]
@@ -133,13 +135,14 @@ namespace Essays.WebApi.Controllers
 
             var subjectCategory = _mapper.Map<SubjectCategory>(subjectCategoryUpdate);
             subjectCategory.Name = subjectCategory.Name.Trim();
+
             var updated = await _subjectCategoryRepository.UpdateSubjectCategory(subjectCategory);
             if (!updated)
             {
                 return StatusCode(500);
             }
 
-            return Ok($"Successfully updated the subject category '{subjectCategory.Name}'");
+            return Ok(subjectCategory.SubjectCategoryId);
         }
 
         [HttpDelete("{subjectCategoryId}")]
@@ -165,7 +168,7 @@ namespace Essays.WebApi.Controllers
                 return StatusCode(500);
             }
 
-            return Ok($"Successfully deleted the subject category '{subjectCategoryToDelete.Name}'");
+            return Ok(subjectCategoryToDelete.SubjectCategoryId);
         }
     }
 }

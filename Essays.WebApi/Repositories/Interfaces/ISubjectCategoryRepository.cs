@@ -6,6 +6,7 @@ namespace Essays.WebApi.Repositories.Interfaces
     {
         Task<ICollection<SubjectCategory>> GetSubjectCategories();
         Task<SubjectCategory?> GetSubjectCategory(string subjectCategoryId);
+        Task<ICollection<Subject>?> GetSubjectsFromCategory(string subjectCategoryId);
         Task<bool> DoesSubjectCategoryExist(string subjectCategoryId);
         Task<bool> CreateSubjectCategory(SubjectCategory subjectCategory);
         Task<bool> UpdateSubjectCategory(SubjectCategory subjectCategory);

@@ -3,6 +3,6 @@
     public static class Constants
     {
         public static string Chars { get; } = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
-        public static int IdLength { get; } = 20;
+        public static int IdLength { get; } = 30;
     }
 }
