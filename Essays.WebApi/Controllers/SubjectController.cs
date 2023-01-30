@@ -24,8 +24,8 @@ namespace Essays.WebApi.Controllers
             _randomGenerator = randomGenerator;
         }
 
-        [HttpGet("GetAll")]
-        [ProducesResponseType(200, Type = typeof(ICollection<Subject>))]
+        [HttpGet("GetSubjects")]
+        [ProducesResponseType(200, Type = typeof(ICollection<SubjectDto>))]
         public async Task<IActionResult> GetSubjects()
         {
             var subjects = await _subjectRepository.GetSubjects();
@@ -35,7 +35,7 @@ namespace Essays.WebApi.Controllers
         }
 
         [HttpGet("GetSubject")]
-        [ProducesResponseType(200, Type = typeof(Subject))]
+        [ProducesResponseType(200, Type = typeof(SubjectDto))]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetSubject([FromQuery] string subjectId)
         {
@@ -52,7 +52,7 @@ namespace Essays.WebApi.Controllers
         }
 
         [HttpGet("GetCategoryOfSubject")]
-        [ProducesResponseType(200, Type = typeof(SubjectCategory))]
+        [ProducesResponseType(200, Type = typeof(SubjectCategoryDto))]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetCategoryOfSubject([FromQuery] string subjectId)
         {
@@ -62,11 +62,13 @@ namespace Essays.WebApi.Controllers
                 return NotFound("Subject with such ID doesn't exist");
             }
 
-            return Ok(category);
+            var categoryDto = _mapper.Map<SubjectCategoryDto>(category);
+
+            return Ok(categoryDto);
         }
 
         [HttpGet("GetEssaysAboutSubject")]
-        [ProducesResponseType(200, Type = typeof(ICollection<Essay>))]
+        [ProducesResponseType(200, Type = typeof(ICollection<EssayDto>))]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetEssaysAboutSubject([FromQuery] string subjectId)
         {
@@ -76,7 +78,9 @@ namespace Essays.WebApi.Controllers
                 return NotFound($"There are no essays about subject with ID '{subjectId}'");
             }
 
-            return Ok(essays);
+            var essaysDto = _mapper.Map<ICollection<EssayDto>>(essays);
+
+            return Ok(essaysDto);
         }
 
         [HttpPost("Create")]
@@ -153,12 +157,6 @@ namespace Essays.WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteSubject([FromQuery] string subjectId)
         {
-            var any = await _subjectRepository.DoesSubjectExist(subjectId);
-            if (!any)
-            {
-                return NotFound("Subject with such ID doesn't exist");
-            }
-
             var subjectToDelete = await _subjectRepository.GetSubject(subjectId);
             if (subjectToDelete == null)
             {

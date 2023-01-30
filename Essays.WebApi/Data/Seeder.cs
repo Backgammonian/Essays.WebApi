@@ -68,8 +68,26 @@ namespace Essays.WebApi.Data
 
                 new CountriesOfAuthors()
                 {
+                    AuthorId = authors[0].AuthorId,
+                    CountryAbbreviation = countries[1].CountryAbbreviation
+                },
+
+                new CountriesOfAuthors()
+                {
                     AuthorId = authors[1].AuthorId,
                     CountryAbbreviation = countries[0].CountryAbbreviation
+                },
+
+                new CountriesOfAuthors()
+                {
+                    AuthorId = authors[2].AuthorId,
+                    CountryAbbreviation = countries[0].CountryAbbreviation
+                },
+
+                new CountriesOfAuthors()
+                {
+                    AuthorId = authors[2].AuthorId,
+                    CountryAbbreviation = countries[1].CountryAbbreviation
                 },
 
                 new CountriesOfAuthors()

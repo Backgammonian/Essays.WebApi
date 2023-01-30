@@ -24,8 +24,8 @@ namespace Essays.WebApi.Controllers
             _randomGenerator = randomGenerator;
         }
 
-        [HttpGet("GetAll")]
-        [ProducesResponseType(200, Type = typeof(ICollection<SubjectCategory>))]
+        [HttpGet("GetSubjectCategories")]
+        [ProducesResponseType(200, Type = typeof(ICollection<SubjectCategoryDto>))]
         public async Task<IActionResult> GetSubjectCategories()
         {
             var subjectCategories = await _subjectCategoryRepository.GetSubjectCategories();
@@ -35,7 +35,7 @@ namespace Essays.WebApi.Controllers
         }
 
         [HttpGet("GetSubjectCategory")]
-        [ProducesResponseType(200, Type = typeof(SubjectCategory))]
+        [ProducesResponseType(200, Type = typeof(SubjectCategoryDto))]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetSubjectCategory([FromQuery] string subjectCategoryId)
         {
@@ -52,7 +52,7 @@ namespace Essays.WebApi.Controllers
         }
 
         [HttpGet("GetSubjectsFromCategory")]
-        [ProducesResponseType(200, Type = typeof(ICollection<Subject>))]
+        [ProducesResponseType(200, Type = typeof(ICollection<SubjectDto>))]
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
         public async Task<IActionResult> GetSubjectsFromCategory([FromQuery] string subjectCategoryId)
@@ -69,7 +69,7 @@ namespace Essays.WebApi.Controllers
                 return NoContent();
             }
 
-            var subjectsDto = _mapper.Map<List<SubjectDto>>(subjects);
+            var subjectsDto = _mapper.Map<ICollection<SubjectDto>>(subjects);
 
             return Ok(subjectsDto);
         }
@@ -145,12 +145,6 @@ namespace Essays.WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteSubjectCategory([FromQuery] string subjectCategoryId)
         {
-            var any = await _subjectCategoryRepository.DoesSubjectCategoryExist(subjectCategoryId);
-            if (!any)
-            {
-                return NotFound("Subject category with such ID doesn't exist");
-            }
-
             var subjectCategoryToDelete = await _subjectCategoryRepository.GetSubjectCategory(subjectCategoryId);
             if (subjectCategoryToDelete == null)
             {

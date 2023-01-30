@@ -3,6 +3,7 @@ using Essays.WebApi.DTOs;
 using Essays.WebApi.Models;
 using Essays.WebApi.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.Metrics;
 
 namespace Essays.WebApi.Controllers
 {
@@ -20,8 +21,8 @@ namespace Essays.WebApi.Controllers
             _countryRepository = countryRepository;
         }
 
-        [HttpGet("GetAll")]
-        [ProducesResponseType(200, Type = typeof(ICollection<Country>))]
+        [HttpGet("GetCountries")]
+        [ProducesResponseType(200, Type = typeof(ICollection<CountryDto>))]
         public async Task<IActionResult> GetCountries()
         {
             var countries = await _countryRepository.GetCountries();
@@ -31,7 +32,7 @@ namespace Essays.WebApi.Controllers
         }
 
         [HttpGet("GetCountry")]
-        [ProducesResponseType(200, Type = typeof(Country))]
+        [ProducesResponseType(200, Type = typeof(CountryDto))]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetCountry([FromQuery] string countryAbbreviation)
         {
@@ -48,7 +49,7 @@ namespace Essays.WebApi.Controllers
         }
 
         [HttpGet("GetAuthorsFromCountry")]
-        [ProducesResponseType(200, Type = typeof(ICollection<Author>))]
+        [ProducesResponseType(200, Type = typeof(ICollection<AuthorDto>))]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetAuthorsFromCountry([FromQuery] string countryAbbreviation)
         {
@@ -58,7 +59,9 @@ namespace Essays.WebApi.Controllers
                 return NotFound($"There are no authors from country with abbreviation '{countryAbbreviation}'");
             }
 
-            return Ok(authors);
+            var authorsDto = _mapper.Map<ICollection<AuthorDto>>(authors);
+
+            return Ok(authorsDto);
         }
 
         [HttpPost("Create")]
@@ -132,12 +135,6 @@ namespace Essays.WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteCountry([FromQuery] string countryAbbreviation)
         {
-            var any = await _countryRepository.DoesCountryExist(countryAbbreviation);
-            if (!any)
-            {
-                return NotFound("Such country doesn't exist");
-            }
-
             var countryToDelete = await _countryRepository.GetCountry(countryAbbreviation);
             if (countryToDelete == null)
             {
