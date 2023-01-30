@@ -5,6 +5,7 @@ namespace Essays.WebApi.Repositories.Interfaces
     public interface IAuthorRepository
     {
         Task<ICollection<Author>> GetAuthors();
+        Task<ICollection<Author>> GetAuthors(int pageNumber, int pageSize);
         Task<Author?> GetAuthor(string authorId);
         Task<ICollection<Essay>?> GetEssaysOfAuthor(string authorId);
         Task<ICollection<Country>?> GetCountriesOfAuthor(string authorId);

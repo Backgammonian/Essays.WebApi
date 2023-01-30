@@ -1,0 +1,10 @@
+global using Xunit;
+global using FluentAssertions;
+global using FakeItEasy;
+global using AutoMapper;
+global using Essays.WebApi.Controllers;
+global using Essays.WebApi.Data.Interfaces;
+global using Essays.WebApi.DTOs;
+global using Essays.WebApi.Models;
+global using Essays.WebApi.Repositories.Interfaces;
+global using Microsoft.AspNetCore.Mvc;

@@ -5,6 +5,7 @@ namespace Essays.WebApi.Repositories.Interfaces
     public interface ISubjectRepository
     {
         Task<ICollection<Subject>> GetSubjects();
+        Task<ICollection<Subject>> GetSubjects(int pageNumber, int pageSize);
         Task<Subject?> GetSubject(string subjectId);
         Task<SubjectCategory?> GetCategoryOfSubject(string subjectId);
         Task<ICollection<Essay>?> GetEssaysAboutSubject(string subjectId);

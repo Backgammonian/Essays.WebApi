@@ -34,6 +34,23 @@ namespace Essays.WebApi.Controllers
             return Ok(subjectsDto);
         }
 
+        [HttpGet("GetSubjectsSlice")]
+        [ProducesResponseType(200, Type = typeof(ICollection<SubjectDto>))]
+        [ProducesResponseType(422)]
+        public async Task<IActionResult> GetSubjectsSlice([FromQuery] int pageNumber, int pageSize)
+        {
+            if (pageNumber < 1 ||
+                pageSize < 1)
+            {
+                return StatusCode(422, $"Wrong page '{pageNumber}' of size '{pageSize}'");
+            }
+
+            var subjects = await _subjectRepository.GetSubjects(pageNumber, pageSize);
+            var subjectsDto = _mapper.Map<List<SubjectDto>>(subjects);
+
+            return Ok(subjectsDto);
+        }
+
         [HttpGet("GetSubject")]
         [ProducesResponseType(200, Type = typeof(SubjectDto))]
         [ProducesResponseType(404)]

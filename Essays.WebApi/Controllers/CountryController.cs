@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Essays.WebApi.DTOs;
 using Essays.WebApi.Models;
+using Essays.WebApi.Repositories.Implementations;
 using Essays.WebApi.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Metrics;
@@ -26,6 +27,23 @@ namespace Essays.WebApi.Controllers
         public async Task<IActionResult> GetCountries()
         {
             var countries = await _countryRepository.GetCountries();
+            var countriesDto = _mapper.Map<List<CountryDto>>(countries);
+
+            return Ok(countriesDto);
+        }
+
+        [HttpGet("GetCountriesSlice")]
+        [ProducesResponseType(200, Type = typeof(ICollection<AuthorDto>))]
+        [ProducesResponseType(422)]
+        public async Task<IActionResult> GetCountriesSlice([FromQuery] int pageNumber, int pageSize)
+        {
+            if (pageNumber < 1 ||
+                pageSize < 1)
+            {
+                return StatusCode(422, $"Wrong page '{pageNumber}' of size '{pageSize}'");
+            }
+
+            var countries = await _countryRepository.GetCountries(pageNumber, pageSize);
             var countriesDto = _mapper.Map<List<CountryDto>>(countries);
 
             return Ok(countriesDto);

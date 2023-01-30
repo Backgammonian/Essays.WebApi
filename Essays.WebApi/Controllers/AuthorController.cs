@@ -32,6 +32,23 @@ namespace Essays.WebApi.Controllers
         public async Task<IActionResult> GetAuthors()
         {
             var authors = await _authorRepository.GetAuthors();
+            var authorsDto = _mapper.Map<ICollection<AuthorDto>>(authors);
+
+            return Ok(authorsDto);
+        }
+
+        [HttpGet("GetAuthorsSlice")]
+        [ProducesResponseType(200, Type = typeof(ICollection<AuthorDto>))]
+        [ProducesResponseType(422)]
+        public async Task<IActionResult> GetAuthorsSlice([FromQuery] int pageNumber, int pageSize)
+        {
+            if (pageNumber < 1 ||
+                pageSize < 1)
+            {
+                return StatusCode(422, $"Wrong page '{pageNumber}' of size '{pageSize}'");
+            }
+
+            var authors = await _authorRepository.GetAuthors(pageNumber, pageSize);
             var authorsDto = _mapper.Map<List<AuthorDto>>(authors);
 
             return Ok(authorsDto);
@@ -133,7 +150,7 @@ namespace Essays.WebApi.Controllers
             var added = await _authorRepository.AddCountryOfAuthor(authorId, countryAbbreviation);
             if (!added)
             {
-                return StatusCode(500, $"Failed to add the country '{countryAbbreviation}' to author with ID '{authorId}'");
+                return StatusCode(500, $"Failed to add the country '{countryAbbreviation}' to author '{authorId}'");
             }
 
             return Ok($"{authorId}, {countryAbbreviation}");
@@ -160,7 +177,7 @@ namespace Essays.WebApi.Controllers
             var removed = await _authorRepository.RemoveCountryOfAuthor(authorId, countryAbbreviation);
             if (!removed)
             {
-                return StatusCode(500, $"Failed to remove the country '{countryAbbreviation}' from author with ID '{authorId}'");
+                return StatusCode(500, $"Failed to remove the country '{countryAbbreviation}' from author '{authorId}'");
             }
 
             return Ok($"{authorId}, {countryAbbreviation}");
