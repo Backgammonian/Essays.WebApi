@@ -2,6 +2,7 @@
 using Essays.WebApi.Models;
 using Essays.WebApi.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 
 namespace Essays.WebApi.Repositories.Implementations
 {
@@ -18,6 +19,17 @@ namespace Essays.WebApi.Repositories.Implementations
         {
             return await _dataContext.Authors
                 .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<ICollection<Author>> GetAuthors(int pageNumber, int pageSize)
+        {
+            var offset = (pageNumber - 1) * pageSize;
+
+            return await _dataContext.Authors
+                .AsNoTracking()
+                .Skip(offset)
+                .Take(pageSize)
                 .ToListAsync();
         }
 

@@ -21,6 +21,17 @@ namespace Essays.WebApi.Repositories.Implementations
                 .ToListAsync();
         }
 
+        public async Task<ICollection<Subject>> GetSubjects(int pageNumber, int pageSize)
+        {
+            var offset = (pageNumber - 1) * pageSize;
+
+            return await _dataContext.Subjects
+                .AsNoTracking()
+                .Skip(offset)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
         public async Task<Subject?> GetSubject(string subjectId)
         {
             return await _dataContext.Subjects

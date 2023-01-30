@@ -5,6 +5,7 @@ namespace Essays.WebApi.Repositories.Interfaces
     public interface ICountryRepository
     {
         Task<ICollection<Country>> GetCountries();
+        Task<ICollection<Country>> GetCountries(int pageNumber, int pageSize);
         Task<Country?> GetCountry(string countryAbbreviation);
         Task<ICollection<Author>?> GetAuthorsFromCountry(string countryAbbreviation);
         Task<bool> DoesCountryExist(string countryAbbreviation);

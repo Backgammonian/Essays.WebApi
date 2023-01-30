@@ -21,6 +21,17 @@ namespace Essays.WebApi.Repositories.Implementations
                 .ToListAsync();
         }
 
+        public async Task<ICollection<Country>> GetCountries(int pageNumber, int pageSize)
+        {
+            var offset = (pageNumber - 1) * pageSize;
+
+            return await _dataContext.Countries
+                .AsNoTracking()
+                .Skip(offset)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
         public async Task<Country?> GetCountry(string countryAbbreviation)
         {
             return await _dataContext.Countries
