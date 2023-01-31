@@ -37,10 +37,10 @@ namespace Essays.WebApi.Controllers
             return Ok(authorsDto);
         }
 
-        [HttpGet("GetAuthorsSlice")]
+        [HttpGet("GetAuthors")]
         [ProducesResponseType(200, Type = typeof(ICollection<AuthorDto>))]
         [ProducesResponseType(422)]
-        public async Task<IActionResult> GetAuthorsSlice([FromQuery] int pageNumber, int pageSize)
+        public async Task<IActionResult> GetAuthors([FromQuery] int pageNumber, int pageSize)
         {
             if (pageNumber < 1 ||
                 pageSize < 1)
@@ -49,7 +49,7 @@ namespace Essays.WebApi.Controllers
             }
 
             var authors = await _authorRepository.GetAuthors(pageNumber, pageSize);
-            var authorsDto = _mapper.Map<List<AuthorDto>>(authors);
+            var authorsDto = _mapper.Map<ICollection<AuthorDto>>(authors);
 
             return Ok(authorsDto);
         }

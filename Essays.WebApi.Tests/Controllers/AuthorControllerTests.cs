@@ -14,8 +14,7 @@
             _randomGenerator = A.Fake<IRandomGenerator>();
             _authorRepository = A.Fake<IAuthorRepository>();
             _countryRepository = A.Fake<ICountryRepository>();
-            _authorController = new AuthorController(
-                _mapper,
+            _authorController = new AuthorController(_mapper,
                 _randomGenerator,
                 _authorRepository,
                 _countryRepository);
@@ -36,14 +35,14 @@
         }
 
         [Fact]
-        public async Task AuthorController_GetAuthorsSlice_ReturnsOK()
+        public async Task AuthorController_GetAuthorsFromPage_ReturnsOK()
         {
             var authors = A.Fake<ICollection<Author>>();
             var authorsDto = A.Fake<ICollection<AuthorDto>>();
             A.CallTo(() => _authorRepository.GetAuthors()).Returns(authors);
             A.CallTo(() => _mapper.Map<ICollection<AuthorDto>>(authors)).Returns(authorsDto);
 
-            var result = await _authorController.GetAuthorsSlice(1, 10);
+            var result = await _authorController.GetAuthors(1, 10);
 
             result.Should().NotBeNull();
             result.Should().BeOfType<OkObjectResult>();

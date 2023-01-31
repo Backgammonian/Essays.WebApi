@@ -29,15 +29,15 @@ namespace Essays.WebApi.Controllers
         public async Task<IActionResult> GetSubjectCategories()
         {
             var subjectCategories = await _subjectCategoryRepository.GetSubjectCategories();
-            var subjectCategoriesDto = _mapper.Map<List<SubjectCategoryDto>>(subjectCategories);
+            var subjectCategoriesDto = _mapper.Map<ICollection<SubjectCategoryDto>>(subjectCategories);
 
             return Ok(subjectCategoriesDto);
         }
 
-        [HttpGet("GetSubjectCategoriesSlice")]
+        [HttpGet("GetSubjectCategories")]
         [ProducesResponseType(200, Type = typeof(ICollection<SubjectCategoryDto>))]
         [ProducesResponseType(422)]
-        public async Task<IActionResult> GetSubjectCategoriesSlice([FromQuery] int pageNumber, int pageSize)
+        public async Task<IActionResult> GetSubjectCategories([FromQuery] int pageNumber, int pageSize)
         {
             if (pageNumber < 1 ||
                 pageSize < 1)
@@ -46,7 +46,7 @@ namespace Essays.WebApi.Controllers
             }
 
             var subjectCategories = await _subjectCategoryRepository.GetSubjectCategories(pageNumber, pageSize);
-            var subjectCategoriesDto = _mapper.Map<List<SubjectCategoryDto>>(subjectCategories);
+            var subjectCategoriesDto = _mapper.Map<ICollection<SubjectCategoryDto>>(subjectCategories);
 
             return Ok(subjectCategoriesDto);
         }

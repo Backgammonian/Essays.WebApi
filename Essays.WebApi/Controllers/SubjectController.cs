@@ -34,10 +34,10 @@ namespace Essays.WebApi.Controllers
             return Ok(subjectsDto);
         }
 
-        [HttpGet("GetSubjectsSlice")]
+        [HttpGet("GetSubjects")]
         [ProducesResponseType(200, Type = typeof(ICollection<SubjectDto>))]
         [ProducesResponseType(422)]
-        public async Task<IActionResult> GetSubjectsSlice([FromQuery] int pageNumber, int pageSize)
+        public async Task<IActionResult> GetSubjects([FromQuery] int pageNumber, int pageSize)
         {
             if (pageNumber < 1 ||
                 pageSize < 1)

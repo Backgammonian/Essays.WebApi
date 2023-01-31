@@ -32,15 +32,15 @@ namespace Essays.WebApi.Controllers
         public async Task<IActionResult> GetEssays()
         {
             var essays = await _essayRepository.GetEssays();
-            var essaysDto = _mapper.Map<List<EssayDto>>(essays);
+            var essaysDto = _mapper.Map<ICollection<EssayDto>>(essays);
 
             return Ok(essaysDto);
         }
 
-        [HttpGet("GetEssaysSlice")]
+        [HttpGet("GetEssays")]
         [ProducesResponseType(200, Type = typeof(ICollection<EssayDto>))]
         [ProducesResponseType(422)]
-        public async Task<IActionResult> GetEssaysSlice([FromQuery] int pageNumber, int pageSize)
+        public async Task<IActionResult> GetEssays([FromQuery] int pageNumber, int pageSize)
         {
             if (pageNumber < 1 ||
                 pageSize < 1)
@@ -49,7 +49,7 @@ namespace Essays.WebApi.Controllers
             }
 
             var essays = await _essayRepository.GetEssays(pageNumber, pageSize);
-            var essaysDto = _mapper.Map<List<EssayDto>>(essays);
+            var essaysDto = _mapper.Map<ICollection<EssayDto>>(essays);
 
             return Ok(essaysDto);
         }
