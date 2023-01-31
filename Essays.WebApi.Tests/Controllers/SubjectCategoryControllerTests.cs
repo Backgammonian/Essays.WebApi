@@ -39,10 +39,12 @@ namespace Essays.WebApi.Tests.Controllers
         {
             var subjectCategories = A.Fake<ICollection<SubjectCategory>>();
             var subjectCategoriesDto = A.Fake<ICollection<SubjectCategoryDto>>();
-            A.CallTo(() => _subjectCategoryRepository.GetSubjectCategories()).Returns(subjectCategories);
+            var page = 1;
+            var size = 10;
+            A.CallTo(() => _subjectCategoryRepository.GetSubjectCategories(page, size)).Returns(subjectCategories);
             A.CallTo(() => _mapper.Map<ICollection<SubjectCategoryDto>>(subjectCategories)).Returns(subjectCategoriesDto);
 
-            var result = await _subjectCategoryController.GetSubjectCategories(1, 10);
+            var result = await _subjectCategoryController.GetSubjectCategories(page, size);
 
             result.Should().NotBeNull();
             result.Should().BeOfType<OkObjectResult>();

@@ -33,10 +33,12 @@
         {
             var countries = A.Fake<ICollection<Country>>();
             var countriesDto = A.Fake<ICollection<CountryDto>>();
-            A.CallTo(() => _countryRepository.GetCountries()).Returns(countries);
+            var page = 1;
+            var size = 10;
+            A.CallTo(() => _countryRepository.GetCountries(page, size)).Returns(countries);
             A.CallTo(() => _mapper.Map<ICollection<CountryDto>>(countries)).Returns(countriesDto);
 
-            var result = await _countryController.GetCountries(1, 10);
+            var result = await _countryController.GetCountries(page, size);
 
             result.Should().NotBeNull();
             result.Should().BeOfType<OkObjectResult>();

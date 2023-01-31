@@ -34,7 +34,7 @@ namespace Essays.WebApi.Controllers
             return Ok(subjectCategoriesDto);
         }
 
-        [HttpGet("GetSubjectCategories")]
+        [HttpGet("GetSubjectCategoriesFromPage")]
         [ProducesResponseType(200, Type = typeof(ICollection<SubjectCategoryDto>))]
         [ProducesResponseType(422)]
         public async Task<IActionResult> GetSubjectCategories([FromQuery] int pageNumber, int pageSize)

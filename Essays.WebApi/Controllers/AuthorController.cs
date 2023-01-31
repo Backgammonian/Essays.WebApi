@@ -37,7 +37,7 @@ namespace Essays.WebApi.Controllers
             return Ok(authorsDto);
         }
 
-        [HttpGet("GetAuthors")]
+        [HttpGet("GetAuthorsFromPage")]
         [ProducesResponseType(200, Type = typeof(ICollection<AuthorDto>))]
         [ProducesResponseType(422)]
         public async Task<IActionResult> GetAuthors([FromQuery] int pageNumber, int pageSize)

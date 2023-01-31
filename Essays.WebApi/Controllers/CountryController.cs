@@ -30,7 +30,7 @@ namespace Essays.WebApi.Controllers
             return Ok(countriesDto);
         }
 
-        [HttpGet("GetCountries")]
+        [HttpGet("GetCountriesFromPage")]
         [ProducesResponseType(200, Type = typeof(ICollection<CountryDto>))]
         [ProducesResponseType(422)]
         public async Task<IActionResult> GetCountries([FromQuery] int pageNumber, int pageSize)
