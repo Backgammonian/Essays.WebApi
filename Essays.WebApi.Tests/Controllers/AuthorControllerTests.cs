@@ -39,10 +39,12 @@
         {
             var authors = A.Fake<ICollection<Author>>();
             var authorsDto = A.Fake<ICollection<AuthorDto>>();
-            A.CallTo(() => _authorRepository.GetAuthors()).Returns(authors);
+            var page = 1;
+            var size = 10;
+            A.CallTo(() => _authorRepository.GetAuthors(page, size)).Returns(authors);
             A.CallTo(() => _mapper.Map<ICollection<AuthorDto>>(authors)).Returns(authorsDto);
 
-            var result = await _authorController.GetAuthors(1, 10);
+            var result = await _authorController.GetAuthors(page, size);
 
             result.Should().NotBeNull();
             result.Should().BeOfType<OkObjectResult>();

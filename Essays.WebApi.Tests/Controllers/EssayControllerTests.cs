@@ -39,10 +39,12 @@
         {
             var essays = A.Fake<ICollection<Essay>>();
             var essaysDto = A.Fake<ICollection<EssayDto>>();
-            A.CallTo(() => _essayRepository.GetEssays()).Returns(essays);
+            var page = 1;
+            var size = 10;
+            A.CallTo(() => _essayRepository.GetEssays(page, size)).Returns(essays);
             A.CallTo(() => _mapper.Map<ICollection<EssayDto>>(essays)).Returns(essaysDto);
 
-            var result = await _essayController.GetEssays(1, 10);
+            var result = await _essayController.GetEssays(page, size);
 
             result.Should().NotBeNull();
             result.Should().BeOfType<OkObjectResult>();

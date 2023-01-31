@@ -2,7 +2,6 @@
 using Essays.WebApi.Models;
 using Essays.WebApi.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing;
 
 namespace Essays.WebApi.Repositories.Implementations
 {
