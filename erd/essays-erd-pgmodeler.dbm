@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+ Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="1.0.0-beta1" use-changelog="false" last-position="0,0" last-zoom="1" max-obj-count="9"
+	 default-schema="public" default-owner="postgres"
+	 layers="Default layer"
+	 active-layers="0"
+	 layer-name-colors="#000000"
+	 layer-rect-colors="#b4b4b4"
+	 show-layer-names="false" show-layer-rects="false">
+<role name="pg_database_owner"
+ inherit="true"
+ password="********"
+ sql-disabled="true">
+</role>
+
+<database name="EssaysDB" encoding="UTF8" lc-collate="English_United States.1252" lc-ctype="English_United States.1252" is-template="false" allow-conns="true">
+	<role name="postgres"/>
+	<tablespace name="pg_default"/>
+</database>
+
+<schema name="public" layers="0" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<table name="__EFMigrationsHistory" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="60" y="60"/>
+	<column name="MigrationId" not-null="true">
+		<type name="character varying" length="150"/>
+	</column>
+	<column name="ProductVersion" not-null="true">
+		<type name="character varying" length="32"/>
+	</column>
+	<constraint name="PK___EFMigrationsHistory" type="pk-constr" table="public.&quot;__EFMigrationsHistory&quot;">
+		<columns names="MigrationId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="Authors" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="500" y="60"/>
+	<column name="AuthorId" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="FirstName" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="LastName" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="PK_Authors" type="pk-constr" table="public.&quot;Authors&quot;">
+		<columns names="AuthorId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="Countries" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="820" y="60"/>
+	<column name="CountryAbbreviation" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="CountryName" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="PK_Countries" type="pk-constr" table="public.&quot;Countries&quot;">
+		<columns names="CountryAbbreviation" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="SubjectCategories" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="1200" y="60"/>
+	<column name="SubjectCategoryId" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="PK_SubjectCategories" type="pk-constr" table="public.&quot;SubjectCategories&quot;">
+		<columns names="SubjectCategoryId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="Essays" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="1600" y="60"/>
+	<column name="EssayId" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Title" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Content" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="AuthorId" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="PK_Essays" type="pk-constr" table="public.&quot;Essays&quot;">
+		<columns names="EssayId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="CountriesOfAuthors" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="60" y="320"/>
+	<column name="AuthorId" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="CountryAbbreviation" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="PK_CountriesOfAuthors" type="pk-constr" table="public.&quot;CountriesOfAuthors&quot;">
+		<columns names="AuthorId,CountryAbbreviation" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="Subjects" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="640" y="320"/>
+	<column name="SubjectId" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="Description" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="CategoryId" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="PK_Subjects" type="pk-constr" table="public.&quot;Subjects&quot;">
+		<columns names="SubjectId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="EssaysAboutSubjects" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="1180" y="320"/>
+	<column name="EssayId" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="SubjectId" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="PK_EssaysAboutSubjects" type="pk-constr" table="public.&quot;EssaysAboutSubjects&quot;">
+		<columns names="EssayId,SubjectId" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<index name="IX_CountriesOfAuthors_CountryAbbreviation" table="public.&quot;CountriesOfAuthors&quot;"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="CountryAbbreviation"/>
+		</idxelement>
+</index>
+
+<index name="IX_Essays_AuthorId" table="public.&quot;Essays&quot;"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="AuthorId"/>
+		</idxelement>
+</index>
+
+<index name="IX_EssaysAboutSubjects_SubjectId" table="public.&quot;EssaysAboutSubjects&quot;"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="SubjectId"/>
+		</idxelement>
+</index>
+
+<index name="IX_Subjects_CategoryId" table="public.&quot;Subjects&quot;"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="CategoryId"/>
+		</idxelement>
+</index>
+
+<constraint name="FK_Essays_Authors_AuthorId" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="public.&quot;Authors&quot;" table="public.&quot;Essays&quot;">
+	<columns names="AuthorId" ref-type="src-columns"/>
+	<columns names="AuthorId" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="FK_CountriesOfAuthors_Authors_AuthorId" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="public.&quot;Authors&quot;" table="public.&quot;CountriesOfAuthors&quot;">
+	<columns names="AuthorId" ref-type="src-columns"/>
+	<columns names="AuthorId" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="FK_CountriesOfAuthors_Countries_CountryAbbreviation" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="public.&quot;Countries&quot;" table="public.&quot;CountriesOfAuthors&quot;">
+	<columns names="CountryAbbreviation" ref-type="src-columns"/>
+	<columns names="CountryAbbreviation" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="FK_Subjects_SubjectCategories_CategoryId" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="public.&quot;SubjectCategories&quot;" table="public.&quot;Subjects&quot;">
+	<columns names="CategoryId" ref-type="src-columns"/>
+	<columns names="SubjectCategoryId" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="FK_EssaysAboutSubjects_Essays_EssayId" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="public.&quot;Essays&quot;" table="public.&quot;EssaysAboutSubjects&quot;">
+	<columns names="EssayId" ref-type="src-columns"/>
+	<columns names="EssayId" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="FK_EssaysAboutSubjects_Subjects_SubjectId" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="public.&quot;Subjects&quot;" table="public.&quot;EssaysAboutSubjects&quot;">
+	<columns names="SubjectId" ref-type="src-columns"/>
+	<columns names="SubjectId" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="&quot;rel_Essays_Authors&quot;" type="relfk" layers="0"
+	 custom-color="#03e11c"
+	 src-table="public.&quot;Essays&quot;"
+	 dst-table="public.&quot;Authors&quot;" reference-fk="FK_Essays_Authors_AuthorId"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="&quot;rel_CountriesOfAuthors_Authors&quot;" type="relfk" layers="0"
+	 custom-color="#d14a4b"
+	 src-table="public.&quot;CountriesOfAuthors&quot;"
+	 dst-table="public.&quot;Authors&quot;" reference-fk="FK_CountriesOfAuthors_Authors_AuthorId"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="&quot;rel_CountriesOfAuthors_Countries&quot;" type="relfk" layers="0"
+	 custom-color="#cc2451"
+	 src-table="public.&quot;CountriesOfAuthors&quot;"
+	 dst-table="public.&quot;Countries&quot;" reference-fk="FK_CountriesOfAuthors_Countries_CountryAbbreviation"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="&quot;rel_Subjects_SubjectCategories&quot;" type="relfk" layers="0"
+	 custom-color="#601bb0"
+	 src-table="public.&quot;Subjects&quot;"
+	 dst-table="public.&quot;SubjectCategories&quot;" reference-fk="FK_Subjects_SubjectCategories_CategoryId"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="&quot;rel_EssaysAboutSubjects_Essays&quot;" type="relfk" layers="0"
+	 custom-color="#01c116"
+	 src-table="public.&quot;EssaysAboutSubjects&quot;"
+	 dst-table="public.&quot;Essays&quot;" reference-fk="FK_EssaysAboutSubjects_Essays_EssayId"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="&quot;rel_EssaysAboutSubjects_Subjects&quot;" type="relfk" layers="0"
+	 custom-color="#3abbe3"
+	 src-table="public.&quot;EssaysAboutSubjects&quot;"
+	 dst-table="public.&quot;Subjects&quot;" reference-fk="FK_EssaysAboutSubjects_Subjects_SubjectId"
+	 src-required="false" dst-required="true"/>
+
+<permission>
+	<object name="public" type="schema"/>
+	<roles names="pg_database_owner"/>
+	<privileges create="true" usage="true"/>
+</permission>
+<permission>
+	<object name="public" type="schema"/>
+	<privileges usage="true"/>
+</permission>
+</dbmodel>
