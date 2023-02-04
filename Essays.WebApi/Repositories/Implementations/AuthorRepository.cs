@@ -39,6 +39,13 @@ namespace Essays.WebApi.Repositories.Implementations
                 .FirstOrDefaultAsync(a => a.AuthorId == authorId);
         }
 
+        public async Task<Author?> GetAuthorByLogin(string login)
+        {
+            return await _dataContext.Authors
+                .AsNoTracking()
+                .FirstOrDefaultAsync(a => a.Login == login);
+        }
+
         public async Task<ICollection<Essay>?> GetEssaysOfAuthor(string authorId)
         {
             var any = await DoesAuthorExist(authorId);
