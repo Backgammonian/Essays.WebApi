@@ -38,6 +38,8 @@ namespace Essays.WebApi.Data
             {
                 new Author()
                 {
+                    Login = "author1",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("1234"),
                     AuthorId = "1",
                     FirstName = "First name 1",
                     LastName = "Last name 1"
@@ -45,6 +47,8 @@ namespace Essays.WebApi.Data
 
                 new Author()
                 {
+                    Login = "author2",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("1234"),
                     AuthorId = "2",
                     FirstName = "First name 2",
                     LastName = "Last name 2"
@@ -52,6 +56,8 @@ namespace Essays.WebApi.Data
 
                 new Author()
                 {
+                    Login = "author3",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("1234"),
                     AuthorId = "3",
                     FirstName = "First name 3",
                     LastName = "Last name 3"

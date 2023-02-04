@@ -138,7 +138,7 @@ namespace Essays.WebApi.Controllers
             var doesEssayExist = await _essayRepository.DoesEssayExist(essayId);
             if (!doesEssayExist)
             {
-                StatusCode(422, $"Essay with ID '{essayId}' doesn't exist!");
+                return StatusCode(422, $"Essay with ID '{essayId}' doesn't exist!");
             }
 
             var doesSubjectExist = await _subjectRepository.DoesSubjectExist(subjectId);
@@ -165,7 +165,7 @@ namespace Essays.WebApi.Controllers
             var doesEssayExist = await _essayRepository.DoesEssayExist(essayId);
             if (!doesEssayExist)
             {
-                StatusCode(422, $"Essay with ID '{essayId}' doesn't exist!");
+                return StatusCode(422, $"Essay with ID '{essayId}' doesn't exist!");
             }
 
             var doesSubjectExist = await _subjectRepository.DoesSubjectExist(subjectId);
