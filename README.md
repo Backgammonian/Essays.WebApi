@@ -7,6 +7,6 @@ This project was created in educational purposes only.
 ![showcase-2](showcase/country.jpg)
 ![showcase-3](showcase/essay.jpg)
 ![showcase-4](showcase/subject-category.jpg)
-![showcase-5](subject/country.jpg)
+![showcase-5](showcase/subject.jpg)
 ## Entity relationship diagram (ERD)
 ![Entity relationship diagram](erd/essays-erd.png)
