@@ -103,6 +103,32 @@ namespace Essays.WebApi.Controllers
             return Ok(countriesDto);
         }
 
+        [HttpPost("Create")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> CreateAuthor([FromBody] AuthorDto authorCreate)
+        {
+            if (authorCreate == null)
+            {
+                return BadRequest("Author model is null!");
+            }
+
+            var author = _mapper.Map<Author>(authorCreate);
+            author.AuthorId = _randomGenerator.GetRandomId();
+            author.FirstName = author.FirstName.Trim();
+            author.LastName = author.LastName.Trim();
+
+            var created = await _authorRepository.CreateAuthor(author);
+            if (!created)
+            {
+                return StatusCode(500, "Failed to create a new author");
+            }
+
+            return Ok(author.AuthorId);
+        }
+
         [HttpPost("AddCountryOfAuthor")]
         [ProducesResponseType(200)]
         [ProducesResponseType(422)]

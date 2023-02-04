@@ -7,7 +7,6 @@ namespace Essays.WebApi.Repositories.Interfaces
         Task<ICollection<Author>> GetAuthors();
         Task<ICollection<Author>> GetAuthors(int pageNumber, int pageSize);
         Task<Author?> GetAuthor(string authorId);
-        Task<Author?> GetAuthorByLogin(string login);
         Task<ICollection<Essay>?> GetEssaysOfAuthor(string authorId);
         Task<ICollection<Country>?> GetCountriesOfAuthor(string authorId);
         Task<bool> DoesAuthorExist(string authorId);
