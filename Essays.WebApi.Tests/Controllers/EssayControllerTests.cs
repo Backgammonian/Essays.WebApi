@@ -146,8 +146,7 @@
         {
             var essayDto = A.Fake<EssayDto>();
             var essay = A.Fake<Essay>();
-            A.CallTo(() => _essayRepository.DoesEssayExist(essayDto.EssayId)).Returns(true);
-            A.CallTo(() => _mapper.Map<Essay>(essayDto)).Returns(essay);
+            A.CallTo(() => _essayRepository.GetEssayTracking(essayDto.EssayId)).Returns(essay);
             A.CallTo(() => _essayRepository.UpdateEssay(essay)).Returns(true);
 
             var result = await _essayController.UpdateEssay(essayDto);
@@ -161,7 +160,7 @@
         {
             var essayId = "1";
             var essay = A.Fake<Essay>();
-            A.CallTo(() => _essayRepository.GetEssay(essayId)).Returns(essay);
+            A.CallTo(() => _essayRepository.GetEssayTracking(essayId)).Returns(essay);
             A.CallTo(() => _essayRepository.DeleteEssay(essay)).Returns(true);
 
             var result = await _essayController.DeleteEssay(essayId);

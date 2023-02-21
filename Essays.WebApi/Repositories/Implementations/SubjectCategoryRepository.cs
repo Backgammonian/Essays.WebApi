@@ -39,6 +39,12 @@ namespace Essays.WebApi.Repositories.Implementations
                 .FirstOrDefaultAsync(s => s.SubjectCategoryId == subjectCategoryId);
         }
 
+        public async Task<SubjectCategory?> GetSubjectCategoryTracking(string subjectCategoryId)
+        {
+            return await _dataContext.SubjectCategories
+                .FirstOrDefaultAsync(s => s.SubjectCategoryId == subjectCategoryId);
+        }
+
         public async Task<ICollection<Subject>?> GetSubjectsFromCategory(string subjectCategoryId)
         {
             var any = await DoesSubjectCategoryExist(subjectCategoryId);
@@ -63,24 +69,28 @@ namespace Essays.WebApi.Repositories.Implementations
         public async Task<bool> DoesSubjectCategoryExist(string subjectCategoryId)
         {
             return await _dataContext.SubjectCategories
+                .AsNoTracking()
                 .AnyAsync(x => x.SubjectCategoryId == subjectCategoryId);
         }
 
         public async Task<bool> CreateSubjectCategory(SubjectCategory subjectCategory)
         {
             await _dataContext.SubjectCategories.AddAsync(subjectCategory);
+
             return await Save();
         }
 
         public async Task<bool> UpdateSubjectCategory(SubjectCategory subjectCategory)
         {
             _dataContext.SubjectCategories.Update(subjectCategory);
+
             return await Save();
         }
 
         public async Task<bool> DeleteSubjectCategory(SubjectCategory subjectCategory)
         {
             _dataContext.SubjectCategories.Remove(subjectCategory);
+
             return await Save();
         }
 

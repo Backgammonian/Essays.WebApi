@@ -105,37 +105,29 @@
         [Fact]
         public async Task SubjectRepository_UpdateSubject_ReturnSuccess()
         {
-            var dbContext = await _dbGenerator.GetDatabase();
-            var repo = new SubjectRepository(dbContext);
-            var subject = new Subject()
-            {
-                SubjectId = "1",
-                Name = "Absolutely new subject name",
-                Description = "Absolutely new subject description",
-                CategoryId = "1"
-            };
-
-            //this line somehow prevents unit-test from failing
-            dbContext.ChangeTracker.Clear();
+            var repo = new SubjectRepository(await _dbGenerator.GetDatabase());
+            var subjectId = "1";
+            var subject = await repo.GetSubjectTracking(subjectId);
+            var newName = "Absolutely new subject name";
+            var newDescription = "Absolutely new subject description";
+            subject.Name = newName;
+            subject.Description = newDescription;
 
             var result = await repo.UpdateSubject(subject);
-            var changedEntity = await repo.GetSubject(subject.SubjectId);
+            var changedEntity = await repo.GetSubject(subjectId);
 
             result.Should().BeTrue();
-            changedEntity.Name.Should().Be(subject.Name);
-            changedEntity.Description.Should().Be(subject.Description);
+            changedEntity.Name.Should().Be(newName);
+            changedEntity.Description.Should().Be(newDescription);
         }
 
         [Fact]
         public async Task SubjectRepository_DeleteSubject_ReturnSuccess()
         {
-            var dbContext = await _dbGenerator.GetDatabase();
-            var repo = new SubjectRepository(dbContext);
+            var repo = new SubjectRepository(await _dbGenerator.GetDatabase());
             var oldCount = (await repo.GetSubjects()).Count;
-            var subject = await repo.GetSubject("1");
-
-            //this line somehow prevents unit-test from failing
-            dbContext.ChangeTracker.Clear();
+            var subjectId = "1";
+            var subject = await repo.GetSubjectTracking(subjectId);
 
             var result = await repo.DeleteSubject(subject);
             var newCount = (await repo.GetSubjects()).Count;

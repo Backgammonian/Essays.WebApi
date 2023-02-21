@@ -129,37 +129,29 @@
         [Fact]
         public async Task EssayRepository_UpdateEssay_ReturnSuccess()
         {
-            var dbContext = await _dbGenerator.GetDatabase();
-            var repo = new EssayRepository(dbContext);
-            var essay = new Essay()
-            {
-                AuthorId = "1",
-                EssayId = "1",
-                Title = "Completely new essay title",
-                Content = "Completely new essay content"
-            };
-
-            //this line somehow prevents unit-test from failing
-            dbContext.ChangeTracker.Clear();
+            var repo = new EssayRepository(await _dbGenerator.GetDatabase());
+            var essayId = "1";
+            var essay = await repo.GetEssayTracking(essayId);
+            var newTitle = "Completely new essay title";
+            var newContent = "Completely new essay content";
+            essay.Title = newTitle;
+            essay.Content = newContent;
 
             var result = await repo.UpdateEssay(essay);
-            var changedEntity = await repo.GetEssay(essay.EssayId);
+            var changedEntity = await repo.GetEssay(essayId);
 
             result.Should().BeTrue();
-            changedEntity.Title.Should().Be(essay.Title);
-            changedEntity.Content.Should().Be(essay.Content);
+            changedEntity.Title.Should().Be(newTitle);
+            changedEntity.Content.Should().Be(newContent);
         }
 
         [Fact]
         public async Task EssayRepository_DeleteEssay_ReturnSuccess()
         {
-            var dbContext = await _dbGenerator.GetDatabase();
-            var repo = new EssayRepository(dbContext);
+            var repo = new EssayRepository(await _dbGenerator.GetDatabase());
             var oldCount = (await repo.GetEssays()).Count;
-            var essay = await repo.GetEssay("1");
-
-            //this line somehow prevents unit-test from failing
-            dbContext.ChangeTracker.Clear();
+            var essayId = "1";
+            var essay = await repo.GetEssayTracking(essayId);
 
             var result = await repo.DeleteEssay(essay);
             var newCount = (await repo.GetEssays()).Count;

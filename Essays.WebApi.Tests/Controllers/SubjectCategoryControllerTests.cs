@@ -1,5 +1,7 @@
 ﻿using Essays.WebApi.Controllers;
 using Essays.WebApi.DTOs;
+using Essays.WebApi.Models;
+using FakeItEasy;
 
 namespace Essays.WebApi.Tests.Controllers
 {
@@ -85,8 +87,10 @@ namespace Essays.WebApi.Tests.Controllers
         [Fact]
         public async Task SubjectCategoryController_Create_ReturnsOK()
         {
+            var subjectCategories = A.Fake<ICollection<SubjectCategory>>();
             var subjectCategoryDto = A.Fake<SubjectCategoryDto>();
             var subjectCategory = A.Fake<SubjectCategory>();
+            A.CallTo(() => _subjectCategoryRepository.GetSubjectCategories()).Returns(subjectCategories);
             A.CallTo(() => _mapper.Map<SubjectCategory>(subjectCategoryDto)).Returns(subjectCategory);
             A.CallTo(() => _subjectCategoryRepository.CreateSubjectCategory(subjectCategory)).Returns(true);
 
@@ -101,8 +105,7 @@ namespace Essays.WebApi.Tests.Controllers
         {
             var subjectCategoryDto = A.Fake<SubjectCategoryDto>();
             var subjectCategory = A.Fake<SubjectCategory>();
-            A.CallTo(() => _subjectCategoryRepository.DoesSubjectCategoryExist(subjectCategoryDto.SubjectCategoryId)).Returns(true);
-            A.CallTo(() => _mapper.Map<SubjectCategory>(subjectCategoryDto)).Returns(subjectCategory);
+            A.CallTo(() => _subjectCategoryRepository.GetSubjectCategoryTracking(subjectCategoryDto.SubjectCategoryId)).Returns(subjectCategory);
             A.CallTo(() => _subjectCategoryRepository.UpdateSubjectCategory(subjectCategory)).Returns(true);
 
             var result = await _subjectCategoryController.UpdateSubjectCategory(subjectCategoryDto);
@@ -116,7 +119,7 @@ namespace Essays.WebApi.Tests.Controllers
         {
             var subjectCategoryId = "1";
             var subjectCategory = A.Fake<SubjectCategory>();
-            A.CallTo(() => _subjectCategoryRepository.GetSubjectCategory(subjectCategoryId)).Returns(subjectCategory);
+            A.CallTo(() => _subjectCategoryRepository.GetSubjectCategoryTracking(subjectCategoryId)).Returns(subjectCategory);
             A.CallTo(() => _subjectCategoryRepository.DeleteSubjectCategory(subjectCategory)).Returns(true);
 
             var result = await _subjectCategoryController.DeleteSubjectCategory(subjectCategoryId);

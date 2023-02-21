@@ -39,6 +39,12 @@ namespace Essays.WebApi.Repositories.Implementations
                 .FirstOrDefaultAsync(e => e.EssayId == essayId);
         }
 
+        public async Task<Essay?> GetEssayTracking(string essayId)
+        {
+            return await _dataContext.Essays
+                .FirstOrDefaultAsync(e => e.EssayId == essayId);
+        }
+
         public async Task<ICollection<Subject>?> GetSubjectsOfEssay(string essayId)
         {
             var any = await DoesEssayExist(essayId);
@@ -93,12 +99,14 @@ namespace Essays.WebApi.Repositories.Implementations
         public async Task<bool> DoesEssayExist(string essayId)
         {
             return await _dataContext.Essays
+                .AsNoTracking()
                 .AnyAsync(e => e.EssayId == essayId);
         }
 
         public async Task<bool> CreateEssay(Essay essay)
         {
             await _dataContext.Essays.AddAsync(essay);
+
             return await Save();
         }
 
@@ -111,6 +119,7 @@ namespace Essays.WebApi.Repositories.Implementations
             };
 
             await _dataContext.EssaysAboutSubjects.AddAsync(subjectOfEssay);
+
             return await Save();
         }
 
@@ -125,18 +134,21 @@ namespace Essays.WebApi.Repositories.Implementations
             }
 
             _dataContext.EssaysAboutSubjects.Remove(subjectOfEssay);
+
             return await Save();
         }
 
         public async Task<bool> UpdateEssay(Essay essay)
         {
             _dataContext.Essays.Update(essay);
+
             return await Save();
         }
 
         public async Task<bool> DeleteEssay(Essay essay)
         {
             _dataContext.Essays.Remove(essay);
+
             return await Save();
         }
 

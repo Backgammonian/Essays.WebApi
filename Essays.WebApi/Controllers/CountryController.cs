@@ -85,16 +85,16 @@ namespace Essays.WebApi.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(422)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> CreateCountry([FromBody] CountryDto countryCreate)
+        public async Task<IActionResult> CreateCountry([FromBody] CreateCountryDto countryCreate)
         {
             if (countryCreate == null)
             {
-                return BadRequest("Country model is null!");
+                return BadRequest();
             }
 
             var countries = await _countryRepository.GetCountries();
             var existingCountry = countries
-                .Where(c => c.CountryName.Trim().ToLower() == countryCreate.CountryName.Trim().ToLower())
+                .Where(c => c.CountryName.ToLower() == countryCreate.CountryName.ToLower())
                 .FirstOrDefault();
 
             if (existingCountry != null)
@@ -102,17 +102,12 @@ namespace Essays.WebApi.Controllers
                 return StatusCode(422, $"Country with name '{countryCreate.CountryName}' already exists");
             }
 
-            var country = _mapper.Map<Country>(countryCreate);
-            country.CountryAbbreviation = country.CountryAbbreviation.Trim().ToLower();
-            country.CountryName = country.CountryName.Trim();
-
-            var created = await _countryRepository.CreateCountry(country);
-            if (!created)
+            if (await _countryRepository.CreateCountry(countryCreate))
             {
-                return StatusCode(500, "Failed to create a new country");
+                return Ok(countryCreate.CountryAbbreviation);
             }
 
-            return Ok(country.CountryAbbreviation);
+            return BadRequest("Failed to create a new country");
         }
 
         [HttpPut("Update")]
@@ -127,15 +122,14 @@ namespace Essays.WebApi.Controllers
                 return BadRequest("Country model is null!");
             }
 
-            var any = await _countryRepository.DoesCountryExist(countryUpdate.CountryAbbreviation);
-            if (!any)
+            var country = await _countryRepository.GetCountryTracking(countryUpdate.CountryAbbreviation);
+            if (country == null)
             {
                 return NotFound("Such country doesn't exist");
             }
 
-            var country = _mapper.Map<Country>(countryUpdate);
-            country.CountryAbbreviation = country.CountryAbbreviation.Trim().ToLower();
-            country.CountryName = country.CountryName.Trim();
+            country.CountryAbbreviation = countryUpdate.CountryAbbreviation.ToLower();
+            country.CountryName = countryUpdate.CountryName;
 
             var updated = await _countryRepository.UpdateCountry(country);
             if (!updated)
@@ -151,7 +145,7 @@ namespace Essays.WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteCountry([FromQuery] string countryAbbreviation)
         {
-            var countryToDelete = await _countryRepository.GetCountry(countryAbbreviation);
+            var countryToDelete = await _countryRepository.GetCountryTracking(countryAbbreviation);
             if (countryToDelete == null)
             {
                 return NotFound("Such country doesn't exist");

@@ -117,8 +117,6 @@ namespace Essays.WebApi.Controllers
 
             var essay = _mapper.Map<Essay>(essayCreate);
             essay.EssayId = _randomGenerator.GetRandomId();
-            essay.Title = essay.Title.Trim();
-            essay.Content = essay.Content.Trim();
 
             var created = await _essayRepository.CreateEssay(essay);
             if (!created)
@@ -187,7 +185,6 @@ namespace Essays.WebApi.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateEssay([FromBody] EssayDto essayUpdate)
         {
             if (essayUpdate == null)
@@ -195,20 +192,19 @@ namespace Essays.WebApi.Controllers
                 return BadRequest("Essay model is null!");
             }
 
-            var any = await _essayRepository.DoesEssayExist(essayUpdate.EssayId);
-            if (!any)
+            var essay = await _essayRepository.GetEssayTracking(essayUpdate.EssayId);
+            if (essay == null)
             {
                 return NotFound("Such essay doesn't exist");
             }
 
-            var essay = _mapper.Map<Essay>(essayUpdate);
-            essay.Title = essay.Title.Trim();
-            essay.Content = essay.Content.Trim();
+            essay.Title = essayUpdate.Title;
+            essay.Content = essayUpdate.Content;
 
             var updated = await _essayRepository.UpdateEssay(essay);
             if (!updated)
             {
-                return StatusCode(500, $"Failed to update the essay with ID '{essay.EssayId}'");
+                return BadRequest($"Failed to update the essay with ID '{essay.EssayId}'");
             }
 
             return Ok(essay.EssayId);
@@ -219,7 +215,7 @@ namespace Essays.WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteEssay([FromQuery] string essayId)
         {
-            var essayToDelete = await _essayRepository.GetEssay(essayId);
+            var essayToDelete = await _essayRepository.GetEssayTracking(essayId);
             if (essayToDelete == null)
             {
                 return NotFound("Such essay doesn't exist");
