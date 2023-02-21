@@ -39,6 +39,12 @@ namespace Essays.WebApi.Repositories.Implementations
                 .FirstOrDefaultAsync(s => s.SubjectId == subjectId);
         }
 
+        public async Task<Subject?> GetSubjectTracking(string subjectId)
+        {
+            return await _dataContext.Subjects
+                .FirstOrDefaultAsync(s => s.SubjectId == subjectId);
+        }
+
         public async Task<SubjectCategory?> GetCategoryOfSubject(string subjectId)
         {
             var any = await DoesSubjectExist(subjectId);
@@ -93,24 +99,28 @@ namespace Essays.WebApi.Repositories.Implementations
         public async Task<bool> DoesSubjectExist(string subjectId)
         {
             return await _dataContext.Subjects
+                .AsNoTracking()
                 .AnyAsync(x => x.SubjectId == subjectId);
         }
 
         public async Task<bool> CreateSubject(Subject subject)
         {
             await _dataContext.Subjects.AddAsync(subject);
+
             return await Save();
         }
 
         public async Task<bool> UpdateSubject(Subject subject)
         {
             _dataContext.Subjects.Update(subject);
+
             return await Save();
         }
 
         public async Task<bool> DeleteSubject(Subject subject)
         {
             _dataContext.Subjects.Remove(subject);
+
             return await Save();
         }
 

@@ -93,34 +93,25 @@ namespace Essays.WebApi.Tests.Repositories
         [Fact]
         public async Task SubjectCategoryRepository_UpdateSubjectCategory_ReturnSuccess()
         {
-            var dbContext = await _dbGenerator.GetDatabase();
-            var repo = new SubjectCategoryRepository(dbContext);
-            var subjectCategory = new SubjectCategory()
-            {
-                SubjectCategoryId = "1",
-                Name = "Completely new subject category name"
-            };
-
-            //this line somehow prevents unit-test from failing
-            dbContext.ChangeTracker.Clear();
+            var repo = new SubjectCategoryRepository(await _dbGenerator.GetDatabase());
+            var subjectCategoryId = "1";
+            var newSubjectCategoryName = "Completely new subject category name";
+            var subjectCategory = await repo.GetSubjectCategoryTracking(subjectCategoryId);
+            subjectCategory.Name = newSubjectCategoryName;
 
             var result = await repo.UpdateSubjectCategory(subjectCategory);
-            var changedEntity = await repo.GetSubjectCategory(subjectCategory.SubjectCategoryId);
+            var changedEntity = await repo.GetSubjectCategory(subjectCategoryId);
 
             result.Should().BeTrue();
-            changedEntity.Name.Should().Be(subjectCategory.Name);
+            changedEntity.Name.Should().Be(newSubjectCategoryName);
         }
 
         [Fact]
         public async Task SubjectCategoryRepository_DeleteSubjectCategory_ReturnSuccess()
         {
-            var dbContext = await _dbGenerator.GetDatabase();
-            var repo = new SubjectCategoryRepository(dbContext);
+            var repo = new SubjectCategoryRepository(await _dbGenerator.GetDatabase());
             var oldCount = (await repo.GetSubjectCategories()).Count;
-            var subjectCategory = await repo.GetSubjectCategory("1");
-
-            //this line somehow prevents unit-test from failing
-            dbContext.ChangeTracker.Clear();
+            var subjectCategory = await repo.GetSubjectCategoryTracking("1");
 
             var result = await repo.DeleteSubjectCategory(subjectCategory);
             var newCount = (await repo.GetSubjectCategories()).Count;

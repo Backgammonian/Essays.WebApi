@@ -105,17 +105,16 @@ namespace Essays.WebApi.Controllers
 
             var subjectCategories = await _subjectCategoryRepository.GetSubjectCategories();
             var existingSubjectCategory = subjectCategories
-                .Where(sc => sc.Name.Trim().ToLower() == subjectCategoryCreate.Name.Trim().ToLower())
+                .Where(sc => sc.Name.ToLower() == subjectCategoryCreate.Name.ToLower())
                 .FirstOrDefault();
 
             if (existingSubjectCategory != null)
             {
-                return StatusCode(422, $"Subject category with name '{subjectCategoryCreate.Name.Trim()}' already exists");
+                return StatusCode(422, $"Subject category with name '{subjectCategoryCreate.Name}' already exists");
             }
 
             var subjectCategory = _mapper.Map<SubjectCategory>(subjectCategoryCreate);
             subjectCategory.SubjectCategoryId = _randomGenerator.GetRandomId();
-            subjectCategory.Name = subjectCategory.Name.Trim();
 
             var created = await _subjectCategoryRepository.CreateSubjectCategory(subjectCategory);
             if (!created)
@@ -139,14 +138,13 @@ namespace Essays.WebApi.Controllers
             }
 
             var subjectCategoryId = subjectCategoryUpdate.SubjectCategoryId;
-            var any = await _subjectCategoryRepository.DoesSubjectCategoryExist(subjectCategoryId);
-            if (!any)
+            var subjectCategory = await _subjectCategoryRepository.GetSubjectCategoryTracking(subjectCategoryId);
+            if (subjectCategory == null)
             {
                 return NotFound("Subject category with such ID doesn't exist");
             }
 
-            var subjectCategory = _mapper.Map<SubjectCategory>(subjectCategoryUpdate);
-            subjectCategory.Name = subjectCategory.Name.Trim();
+            subjectCategory.Name = subjectCategoryUpdate.Name;
 
             var updated = await _subjectCategoryRepository.UpdateSubjectCategory(subjectCategory);
             if (!updated)
@@ -162,7 +160,7 @@ namespace Essays.WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteSubjectCategory([FromQuery] string subjectCategoryId)
         {
-            var subjectCategoryToDelete = await _subjectCategoryRepository.GetSubjectCategory(subjectCategoryId);
+            var subjectCategoryToDelete = await _subjectCategoryRepository.GetSubjectCategoryTracking(subjectCategoryId);
             if (subjectCategoryToDelete == null)
             {
                 return NotFound("Subject category with such ID doesn't exist");

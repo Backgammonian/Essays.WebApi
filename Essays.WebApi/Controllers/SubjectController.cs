@@ -104,7 +104,6 @@ namespace Essays.WebApi.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(422)]
-        [ProducesResponseType(500)]
         public async Task<IActionResult> CreateSubject([FromBody] SubjectDto subjectCreate)
         {
             if (subjectCreate == null)
@@ -114,7 +113,7 @@ namespace Essays.WebApi.Controllers
 
             var subjects = await _subjectRepository.GetSubjects();
             var existingSubject = subjects
-                .Where(s => s.Name.Trim().ToLower() == subjectCreate.Name.Trim().ToLower())
+                .Where(s => s.Name.ToLower() == subjectCreate.Name.ToLower())
                 .FirstOrDefault();
 
             if (existingSubject != null)
@@ -124,13 +123,11 @@ namespace Essays.WebApi.Controllers
 
             var subject = _mapper.Map<Subject>(subjectCreate);
             subject.SubjectId = _randomGenerator.GetRandomId();
-            subject.Name = subject.Name.Trim();
-            subject.Description = subject.Description.Trim();
 
             var created = await _subjectRepository.CreateSubject(subject);
             if (!created)
             {
-                return StatusCode(500, "Failed to create a new subject");
+                return BadRequest("Failed to create a new subject");
             }
 
             return Ok(subject.SubjectId);
@@ -150,15 +147,14 @@ namespace Essays.WebApi.Controllers
 
             var subjectId = subjectUpdate.SubjectId;
 
-            var any = await _subjectRepository.DoesSubjectExist(subjectId);
-            if (!any)
+            var subject = await _subjectRepository.GetSubjectTracking(subjectId);
+            if (subject == null)
             {
                 return NotFound("Subject with such ID doesn't exist");
             }
 
-            var subject = _mapper.Map<Subject>(subjectUpdate);
-            subject.Name = subject.Name.Trim();
-            subject.Description = subject.Description.Trim();
+            subject.Name = subjectUpdate.Name;
+            subject.Description = subjectUpdate.Description;
 
             var updated = await _subjectRepository.UpdateSubject(subject);
             if (!updated)
@@ -174,7 +170,7 @@ namespace Essays.WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteSubject([FromQuery] string subjectId)
         {
-            var subjectToDelete = await _subjectRepository.GetSubject(subjectId);
+            var subjectToDelete = await _subjectRepository.GetSubjectTracking(subjectId);
             if (subjectToDelete == null)
             {
                 return NotFound("Subject with such ID doesn't exist");

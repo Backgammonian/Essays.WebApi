@@ -75,13 +75,13 @@
         {
             var repo = new CountryRepository(await _dbGenerator.GetDatabase());
             var oldCount = (await repo.GetCountries()).Count;
-            var country = new Country()
-            {
+            var createCountryDto = new CreateCountryDto()
+            { 
                 CountryAbbreviation = "tf",
                 CountryName = "Teufort"
             };
 
-            var result = await repo.CreateCountry(country);
+            var result = await repo.CreateCountry(createCountryDto);
             var newCount = (await repo.GetCountries()).Count;
 
             result.Should().BeTrue();
@@ -91,34 +91,25 @@
         [Fact]
         public async Task CountryRepository_UpdateCountry_ReturnSuccess()
         {
-            var dbContext = await _dbGenerator.GetDatabase();
-            var repo = new CountryRepository(dbContext);
-            var country = new Country()
-            {
-                CountryAbbreviation = "cto",
-                CountryName = "Teufort"
-            };
-
-            //this line somehow prevents unit-test from failing
-            dbContext.ChangeTracker.Clear();
+            var repo = new CountryRepository(await _dbGenerator.GetDatabase());
+            var countryAbbreviation = "cto";
+            var newCountryName = "Teufort";
+            var country = await repo.GetCountryTracking(countryAbbreviation);
+            country.CountryName = newCountryName;
 
             var result = await repo.UpdateCountry(country);
-            var changedEntity = await repo.GetCountry(country.CountryAbbreviation);
+            var changedEntity = await repo.GetCountry(countryAbbreviation);
 
             result.Should().BeTrue();
-            changedEntity.CountryName.Should().Be(country.CountryName);
+            changedEntity.CountryName.Should().Be(newCountryName);
         }
 
         [Fact]
         public async Task CountryRepository_DeleteCountry_ReturnSuccess()
         {
-            var dbContext = await _dbGenerator.GetDatabase();
-            var repo = new CountryRepository(dbContext);
+            var repo = new CountryRepository(await _dbGenerator.GetDatabase());
             var oldCount = (await repo.GetCountries()).Count;
-            var country = await repo.GetCountry("cto");
-
-            //this line somehow prevents unit-test from failing
-            dbContext.ChangeTracker.Clear();
+            var country = await repo.GetCountryTracking("cto");
 
             var result = await repo.DeleteCountry(country);
             var newCount = (await repo.GetCountries()).Count;

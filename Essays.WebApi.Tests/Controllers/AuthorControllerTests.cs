@@ -145,8 +145,7 @@
         {
             var authorDto = A.Fake<AuthorDto>();
             var author = A.Fake<Author>();
-            A.CallTo(() => _authorRepository.DoesAuthorExist(authorDto.AuthorId)).Returns(true);
-            A.CallTo(() => _mapper.Map<Author>(authorDto)).Returns(author);
+            A.CallTo(() => _authorRepository.GetAuthorTracking(authorDto.AuthorId)).Returns(author);
             A.CallTo(() => _authorRepository.UpdateAuthor(author)).Returns(true);
 
             var result = await _authorController.UpdateAuthor(authorDto);
@@ -160,7 +159,7 @@
         {
             var authorId = "1";
             var author = A.Fake<Author>();
-            A.CallTo(() => _authorRepository.GetAuthor(authorId)).Returns(author);
+            A.CallTo(() => _authorRepository.GetAuthorTracking(authorId)).Returns(author);
             A.CallTo(() => _authorRepository.DeleteAuthor(author)).Returns(true);
 
             var result = await _authorController.DeleteAuthor(authorId);

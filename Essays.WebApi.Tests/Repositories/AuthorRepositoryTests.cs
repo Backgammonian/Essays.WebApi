@@ -128,36 +128,29 @@
         [Fact]
         public async Task AuthorRepository_UpdateAuthor_ReturnSuccess()
         {
-            var dbContext = await _dbGenerator.GetDatabase();
-            var repo = new AuthorRepository(dbContext);
-            var author = new Author()
-            {
-                AuthorId = "1",
-                FirstName = "Completely new first name",
-                LastName = "Completely new last name"
-            };
-
-            //this line somehow prevents unit-test from failing
-            dbContext.ChangeTracker.Clear();
+            var repo = new AuthorRepository(await _dbGenerator.GetDatabase());
+            var authorId = "1";
+            var newFirstName = "Completely new first name";
+            var newLastName = "Completely new last name";
+            var author = await repo.GetAuthorTracking(authorId);
+            author.FirstName = newFirstName;
+            author.LastName = newLastName;
 
             var result = await repo.UpdateAuthor(author);
-            var changedEntity = await repo.GetAuthor(author.AuthorId);
+            var changedEntity = await repo.GetAuthor(authorId);
 
             result.Should().BeTrue();
-            changedEntity.FirstName.Should().Be(author.FirstName);
-            changedEntity.LastName.Should().Be(author.LastName);
+            changedEntity.FirstName.Should().Be(newFirstName);
+            changedEntity.LastName.Should().Be(newLastName);
         }
 
         [Fact]
         public async Task AuthorRepository_DeleteAuthor_ReturnSuccess()
         {
-            var dbContext = await _dbGenerator.GetDatabase();
-            var repo = new AuthorRepository(dbContext);
+            var repo = new AuthorRepository(await _dbGenerator.GetDatabase());
             var oldCount = (await repo.GetAuthors()).Count;
-            var author = await repo.GetAuthor("1");
-
-            //this line somehow prevents unit-test from failing
-            dbContext.ChangeTracker.Clear();
+            var authorId = "1";
+            var author = await repo.GetAuthorTracking(authorId);
 
             var result = await repo.DeleteAuthor(author);
             var newCount = (await repo.GetAuthors()).Count;

@@ -7,6 +7,7 @@ namespace Essays.WebApi.Repositories.Interfaces
         Task<ICollection<Subject>> GetSubjects();
         Task<ICollection<Subject>> GetSubjects(int pageNumber, int pageSize);
         Task<Subject?> GetSubject(string subjectId);
+        Task<Subject?> GetSubjectTracking(string subjectId);
         Task<SubjectCategory?> GetCategoryOfSubject(string subjectId);
         Task<ICollection<Essay>?> GetEssaysAboutSubject(string subjectId);
         Task<bool> DoesSubjectExist(string subjectId);

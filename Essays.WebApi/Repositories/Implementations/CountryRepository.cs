@@ -1,4 +1,5 @@
 ﻿using Essays.WebApi.Data;
+using Essays.WebApi.DTOs;
 using Essays.WebApi.Models;
 using Essays.WebApi.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +40,12 @@ namespace Essays.WebApi.Repositories.Implementations
                 .FirstOrDefaultAsync(c => c.CountryAbbreviation == countryAbbreviation);
         }
 
+        public async Task<Country?> GetCountryTracking(string countryAbbreviation)
+        {
+            return await _dataContext.Countries
+                .FirstOrDefaultAsync(c => c.CountryAbbreviation == countryAbbreviation);
+        }
+
         public async Task<ICollection<Author>?> GetAuthorsFromCountry(string countryAbbreviation)
         {
             var any = await DoesCountryExist(countryAbbreviation);
@@ -71,24 +78,34 @@ namespace Essays.WebApi.Repositories.Implementations
         public async Task<bool> DoesCountryExist(string countryAbbreviation)
         {
             return await _dataContext.Countries
+                .AsNoTracking()
                 .AnyAsync(x => x.CountryAbbreviation == countryAbbreviation);
         }
 
-        public async Task<bool> CreateCountry(Country country)
+        public async Task<bool> CreateCountry(CreateCountryDto createCountryDto)
         {
+            var country = new Country()
+            {
+                CountryAbbreviation = createCountryDto.CountryAbbreviation,
+                CountryName = createCountryDto.CountryName
+            };
+
             await _dataContext.Countries.AddAsync(country);
+
             return await Save();
         }
 
         public async Task<bool> UpdateCountry(Country country)
         {
             _dataContext.Countries.Update(country);
+
             return await Save();
         }
 
         public async Task<bool> DeleteCountry(Country country)
         {
             _dataContext.Countries.Remove(country);
+
             return await Save();
         }
 

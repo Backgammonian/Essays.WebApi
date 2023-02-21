@@ -39,6 +39,12 @@ namespace Essays.WebApi.Repositories.Implementations
                 .FirstOrDefaultAsync(a => a.AuthorId == authorId);
         }
 
+        public async Task<Author?> GetAuthorTracking(string authorId)
+        {
+            return await _dataContext.Authors
+                .FirstOrDefaultAsync(a => a.AuthorId == authorId);
+        }
+
         public async Task<ICollection<Essay>?> GetEssaysOfAuthor(string authorId)
         {
             var any = await DoesAuthorExist(authorId);
@@ -85,12 +91,14 @@ namespace Essays.WebApi.Repositories.Implementations
         public async Task<bool> DoesAuthorExist(string authorId)
         {
             return await _dataContext.Authors
+                .AsNoTracking()
                 .AnyAsync(a => a.AuthorId == authorId);
         }
 
         public async Task<bool> CreateAuthor(Author author)
         {
             await _dataContext.Authors.AddAsync(author);
+
             return await Save();
         }
 
@@ -103,6 +111,7 @@ namespace Essays.WebApi.Repositories.Implementations
             };
 
             await _dataContext.CountriesOfAuthors.AddAsync(countryOfAuthor);
+
             return await Save();
         }
 
@@ -117,18 +126,21 @@ namespace Essays.WebApi.Repositories.Implementations
             }
 
             _dataContext.CountriesOfAuthors.Remove(countryOfAuthor);
+
             return await Save();
         }
 
         public async Task<bool> UpdateAuthor(Author author)
         {
             _dataContext.Authors.Update(author);
+
             return await Save();
         }
 
         public async Task<bool> DeleteAuthor(Author author)
         {
             _dataContext.Authors.Remove(author);
+
             return await Save();
         }
 

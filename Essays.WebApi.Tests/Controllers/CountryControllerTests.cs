@@ -1,4 +1,6 @@
-﻿namespace Essays.WebApi.Tests.Controllers
+﻿using FakeItEasy;
+
+namespace Essays.WebApi.Tests.Controllers
 {
     public class CountryControllerTests
     {
@@ -78,12 +80,12 @@
         [Fact]
         public async Task CountryController_CreateCountry_ReturnsOK()
         {
-            var countryDto = A.Fake<CountryDto>();
-            var country = A.Fake<Country>();
-            A.CallTo(() => _mapper.Map<Country>(countryDto)).Returns(country);
-            A.CallTo(() => _countryRepository.CreateCountry(country)).Returns(true);
+            var createCountryDto = A.Fake<CreateCountryDto>();
+            var countries = A.Fake<ICollection<Country>>();
+            A.CallTo(() => _countryRepository.GetCountries()).Returns(countries);
+            A.CallTo(() => _countryRepository.CreateCountry(createCountryDto)).Returns(true);
 
-            var result = await _countryController.CreateCountry(countryDto);
+            var result = await _countryController.CreateCountry(createCountryDto);
 
             result.Should().NotBeNull();
             result.Should().BeOfType<OkObjectResult>();
@@ -94,8 +96,7 @@
         {
             var countryDto = A.Fake<CountryDto>();
             var country = A.Fake<Country>();
-            A.CallTo(() => _countryRepository.DoesCountryExist(countryDto.CountryAbbreviation)).Returns(true);
-            A.CallTo(() => _mapper.Map<Country>(countryDto)).Returns(country);
+            A.CallTo(() => _countryRepository.GetCountryTracking(countryDto.CountryAbbreviation)).Returns(country);
             A.CallTo(() => _countryRepository.UpdateCountry(country)).Returns(true);
 
             var result = await _countryController.UpdateCountry(countryDto);
@@ -109,7 +110,7 @@
         {
             var countryAbbreviation = "ctr";
             var country = A.Fake<Country>();
-            A.CallTo(() => _countryRepository.GetCountry(countryAbbreviation)).Returns(country);
+            A.CallTo(() => _countryRepository.GetCountryTracking(countryAbbreviation)).Returns(country);
             A.CallTo(() => _countryRepository.DeleteCountry(country)).Returns(true);
 
             var result = await _countryController.DeleteCountry(countryAbbreviation);

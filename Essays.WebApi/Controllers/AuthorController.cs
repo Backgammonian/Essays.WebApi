@@ -117,8 +117,6 @@ namespace Essays.WebApi.Controllers
 
             var author = _mapper.Map<Author>(authorCreate);
             author.AuthorId = _randomGenerator.GetRandomId();
-            author.FirstName = author.FirstName.Trim();
-            author.LastName = author.LastName.Trim();
 
             var created = await _authorRepository.CreateAuthor(author);
             if (!created)
@@ -195,15 +193,14 @@ namespace Essays.WebApi.Controllers
                 return BadRequest("Author model is null!");
             }
 
-            var any = await _authorRepository.DoesAuthorExist(authorUpdate.AuthorId);
-            if (!any)
+            var author = await _authorRepository.GetAuthorTracking(authorUpdate.AuthorId);
+            if (author == null)
             {
                 return NotFound("Such author doesn't exist");
             }
 
-            var author = _mapper.Map<Author>(authorUpdate);
-            author.FirstName = author.FirstName.Trim();
-            author.LastName = author.LastName.Trim();
+            author.FirstName = author.FirstName;
+            author.LastName = author.LastName;
 
             var updated = await _authorRepository.UpdateAuthor(author);
             if (!updated)
@@ -219,7 +216,7 @@ namespace Essays.WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteAuthor([FromQuery] string authorId)
         {
-            var authorToDelete = await _authorRepository.GetAuthor(authorId);
+            var authorToDelete = await _authorRepository.GetAuthorTracking(authorId);
             if (authorToDelete == null)
             {
                 return NotFound("Such author doesn't exist");

@@ -1,4 +1,5 @@
 ﻿using Essays.WebApi.Controllers;
+using Essays.WebApi.Models;
 using FakeItEasy;
 
 namespace Essays.WebApi.Tests.Controllers
@@ -99,8 +100,10 @@ namespace Essays.WebApi.Tests.Controllers
         [Fact]
         public async Task SubjectController_Create_ReturnsOK()
         {
+            var subjects = A.Fake<ICollection<Subject>>();
             var subjectDto = A.Fake<SubjectDto>();
             var subject = A.Fake<Subject>();
+            A.CallTo(() => _subjectRepository.GetSubjects()).Returns(subjects);
             A.CallTo(() => _mapper.Map<Subject>(subjectDto)).Returns(subject);
             A.CallTo(() => _subjectRepository.CreateSubject(subject)).Returns(true);
 
@@ -115,8 +118,7 @@ namespace Essays.WebApi.Tests.Controllers
         {
             var subjectDto = A.Fake<SubjectDto>();
             var subject = A.Fake<Subject>();
-            A.CallTo(() => _subjectRepository.DoesSubjectExist(subjectDto.SubjectId)).Returns(true);
-            A.CallTo(() => _mapper.Map<Subject>(subjectDto)).Returns(subject);
+            A.CallTo(() => _subjectRepository.GetSubjectTracking(subjectDto.SubjectId)).Returns(subject);
             A.CallTo(() => _subjectRepository.UpdateSubject(subject)).Returns(true);
 
             var result = await _subjectController.UpdateSubject(subjectDto);
@@ -130,7 +132,7 @@ namespace Essays.WebApi.Tests.Controllers
         {
             var subjectId = "1";
             var subject = A.Fake<Subject>();
-            A.CallTo(() => _subjectRepository.GetSubject(subjectId)).Returns(subject);
+            A.CallTo(() => _subjectRepository.GetSubjectTracking(subjectId)).Returns(subject);
             A.CallTo(() => _subjectRepository.DeleteSubject(subject)).Returns(true);
 
             var result = await _subjectController.DeleteSubject(subjectId);
